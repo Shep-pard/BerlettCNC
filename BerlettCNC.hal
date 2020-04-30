@@ -6,7 +6,7 @@
 loadrt [KINS]KINEMATICS
 loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
 loadrt hostmot2
-loadrt hm2_pci config=" num_encoders=6 num_pwmgens=0 num_stepgens=0 sserial_port_0=000000" 
+loadrt hm2_pci config=" num_encoders=6 num_pwmgens=0 num_stepgens=0 sserial_port_0=200000" 
 setp    hm2_5i25.0.watchdog.timeout_ns 5000000
 loadrt pid names=pid.x,pid.y,pid.z,pid.s
 
@@ -121,7 +121,7 @@ net x-pos-rawcounts        <=  hm2_5i25.0.encoder.00.rawcounts
 # ---setup home / limit switch signals---
 
 net max-home-x     =>  joint.0.home-sw-in
-net min-x     =>  joint.0.neg-lim-sw-in
+net min-x          =>  joint.0.neg-lim-sw-in
 net max-home-x     =>  joint.0.pos-lim-sw-in
 
 #*******************
@@ -274,22 +274,21 @@ sets spindle-at-speed true
 #******************************
 
 #  ---HALUI signals---
-
-net axis-select-x  halui.axis.x.select
-net jog-x-pos      halui.axis.x.plus
-net jog-x-neg      halui.axis.x.minus
-net jog-x-analog   halui.axis.x.analog
-net x-is-homed     halui.joint.0.is-homed
-net axis-select-y  halui.axis.y.select
-net jog-y-pos      halui.axis.y.plus
-net jog-y-neg      halui.axis.y.minus
-net jog-y-analog   halui.axis.y.analog
-net y-is-homed     halui.joint.1.is-homed
-net axis-select-z  halui.axis.z.select
-net jog-z-pos      halui.axis.z.plus
-net jog-z-neg      halui.axis.z.minus
-net jog-z-analog   halui.axis.z.analog
-net z-is-homed     halui.joint.2.is-homed
+net axis-select-x         halui.axis.x.select
+net jog-x-pos             halui.axis.x.plus
+net jog-x-neg             halui.axis.x.minus
+net jog-x-analog          halui.axis.x.analog
+net x-is-homed            halui.joint.0.is-homed
+net axis-select-y         halui.axis.y.select
+net jog-y-pos             halui.axis.y.plus
+net jog-y-neg             halui.axis.y.minus
+net jog-y-analog          halui.axis.y.analog
+net y-is-homed            halui.joint.1.is-homed
+net axis-select-z         halui.axis.z.select
+net jog-z-pos             halui.axis.z.plus
+net jog-z-neg             halui.axis.z.minus
+net jog-z-analog          halui.axis.z.analog
+net z-is-homed            halui.joint.2.is-homed
 net jog-selected-pos      halui.axis.selected.plus
 net jog-selected-neg      halui.axis.selected.minus
 net spindle-manual-cw     halui.spindle.0.forward
