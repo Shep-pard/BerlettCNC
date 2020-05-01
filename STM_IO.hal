@@ -33,80 +33,106 @@ loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/my_LinuxCNC_machine/STM_IO
 
 
 # create nets for all Buttons
-net key-01     <= STM_IO.IN.36 
-net key-001    <= STM_IO.IN.33 
-net key-0001   <= STM_IO.IN.35 
-net key-A-     <= STM_IO.IN.39 
-net key-A+     <= STM_IO.IN.42 
-net key-X-     <= STM_IO.IN.10
-net key-X+     <= STM_IO.IN.38 
-net key-Y-     <= STM_IO.IN.16 
-net key-Y+     <= STM_IO.IN.14 
-net key-Z-     <= STM_IO.IN.12 
-net key-Z+     <= STM_IO.IN.43 
-net key-JogLck <= STM_IO.IN.34 
-net key-LockX  <= STM_IO.IN.24 
-net key-LockY  <= STM_IO.IN.40 
-net key-LockZ  <= STM_IO.IN.11
-net key-LLkX   <= STM_IO.IN.31
-net key-RLkX   <= STM_IO.IN.25 
-net key-SpdlL  <= STM_IO.IN.23
-net key-SpdlR  <= STM_IO.IN.15 
-net key-TlChng <= STM_IO.IN.46 
-net key-Flood  <= STM_IO.IN.41
-net key-MMS    <= STM_IO.IN.30
-net key-Spare1 <= STM_IO.IN.44 
-net key-Spare2 <= STM_IO.IN.47 
-net key-Spare3 <= STM_IO.IN.27 
-net key-Spare4 <= STM_IO.IN.28
-net key-Spare5 <= STM_IO.IN.18 
-net key-Spare6 <= STM_IO.IN.21 
-net key-Spare7 <= STM_IO.IN.19 
+#net key-01     <= STM_IO.IN.36 
+#net key-001    <= STM_IO.IN.33 
+#net key-0001   <= STM_IO.IN.35 
+#net key-A-     <= STM_IO.IN.39 
+#net key-A+     <= STM_IO.IN.42 
+#net key-X-     <= STM_IO.IN.10
+#net key-X+     <= STM_IO.IN.38 
+#net key-Y-     <= STM_IO.IN.16 
+#net key-Y+     <= STM_IO.IN.14 
+#net key-Z-     <= STM_IO.IN.12 
+#net key-Z+     <= STM_IO.IN.43 
+#net key-JogLck <= STM_IO.IN.34 
+#net key-LockX  <= STM_IO.IN.24 
+#net key-LockY  <= STM_IO.IN.40 
+#net key-LockZ  <= STM_IO.IN.11
+#net key-LLkX   <= STM_IO.IN.31
+#net key-RLkX   <= STM_IO.IN.25 
+##net key-SpdlL  <= STM_IO.IN.23
+#net key-SpdlR  <= STM_IO.IN.15 
+#net key-TlChng <= STM_IO.IN.46 
+#net key-Flood  <= STM_IO.IN.41
+#net key-MMS    <= STM_IO.IN.30
+#net key-Spare1 <= STM_IO.IN.44 
+#net key-Spare2 <= STM_IO.IN.47 
+#net key-Spare3 <= STM_IO.IN.27 
+#net key-Spare4 <= STM_IO.IN.28
+#net key-Spare5 <= STM_IO.IN.18 
+#net key-Spare6 <= STM_IO.IN.21 
+#net key-Spare7 <= STM_IO.IN.19 
 #
 # create nets for all LEDs
 
-net led-01      => STM_IO.OUT.39
-net led-001     => STM_IO.OUT.12
-net led-0001    => STM_IO.OUT.38
-net led-A-      => STM_IO.OUT.09
-net led-A+      => STM_IO.OUT.05
-net led-X-      => STM_IO.OUT.24
-net led-X+      => STM_IO.OUT.26
-net led-Y-      => STM_IO.OUT.42
-net led-Y+      => STM_IO.OUT.02
-net led-Z-      => STM_IO.OUT.07
-net led-Z+      => STM_IO.OUT.33
-net led-JogLck  => 
-net led-LockX   => STM_IO.OUT.22
-net led-LockY   => STM_IO.OUT.25
-net led-LockZ   => STM_IO.OUT.35
-net led-LLkX    => STM_IO.OUT.21
-net led-RLkX    => STM_IO.OUT.20
-net led-SpdlL   => STM_IO.OUT.06
-net led-SpdlR   => STM_IO.OUT.18
-net led-TlChng  => STM_IO.OUT.15
-net led-Flood   => STM_IO.OUT.08
-net led-MMS     => STM_IO.OUT.14
-net led-Spare1  => STM_IO.OUT.04
-net led-Spare2  => STM_IO.OUT.11
-net led-Spare3  => STM_IO.OUT.40
-net led-Spare4  => STM_IO.OUT.23
-net led-Spare5  => STM_IO.OUT.19
-net led-Spare6  => STM_IO.OUT.10
-net led-Spare7  => STM_IO.OUT.45
+#net led-01      => STM_IO.OUT.39
+#net led-001     => STM_IO.OUT.12
+#net led-0001    => STM_IO.OUT.38
+#net led-A-      => STM_IO.OUT.09
+#net led-A+      => STM_IO.OUT.05
+#net led-X-      => STM_IO.OUT.24
+#net led-X+      => STM_IO.OUT.26
+#net led-Y-      => STM_IO.OUT.42
+#net led-Y+      => STM_IO.OUT.02
+#net led-Z-      => STM_IO.OUT.07
+#net led-Z+      => STM_IO.OUT.33
+#net led-JogLck  => 
+#net led-LockX   => STM_IO.OUT.22
+#net led-LockY   => STM_IO.OUT.25
+#net led-LockZ   => STM_IO.OUT.35
+#net led-LLkX    => STM_IO.OUT.21
+#net led-RLkX    => STM_IO.OUT.20
+#net led-SpdlL   => STM_IO.OUT.06
+#net led-SpdlR   => STM_IO.OUT.18
+#net led-TlChng  => STM_IO.OUT.15
+#net led-Flood   => STM_IO.OUT.08
+#net led-MMS     => STM_IO.OUT.14
+#net led-Spare1  => STM_IO.OUT.04
+#net led-Spare2  => STM_IO.OUT.11
+#net led-Spare3  => STM_IO.OUT.40
+#net led-Spare4  => STM_IO.OUT.23
+#net led-Spare5  => STM_IO.OUT.19
+#net led-Spare6  => STM_IO.OUT.10
+#net led-Spare7  => STM_IO.OUT.45
 
 
 
 
 # setup the axis scale 
 
+loadrt or2 names=frtpnl.sel-X,frtpnl.sel-Y,frtpnl.sel-Z,rst-01,rst-001,rst-0001
+
+addf frtpnl.sel-X   servo-thread
+addf frtpnl.sel-Y   servo-thread
+addf frtpnl.sel-Z   servo-thread
+addf rst-01   servo-thread
+addf rst-001  servo-thread
+addf rst-0001 servo-thread
+
 loadrt mux8 names=frtpnl.step-choice
 addf frtpnl.step-choice servo-thread
 
-net key-0001  => frtpnl.step-choice.sel0
-net key-001   => frtpnl.step-choice.sel1
-net key-01    => frtpnl.step-choice.sel2
 
+loadrt toggleRst names=key-01,key-001,key-0001
+addf key-01   servo-thread
+addf key-001  servo-thread
+addf key-0001 servo-thread
+
+
+
+net key-01.key     <= STM_IO.IN.36 => key-01.in   => rst-001.in0  => rst-0001.in0
+net key-001.key    <= STM_IO.IN.33 => key-001.in  => rst-01.in0   => rst-0001.in1
+net key-0001.key   <= STM_IO.IN.35 => key-0001.in => rst-01.in1   => rst-001.in1
+
+net rst-01         <=  key-01.rst   => rst-01.out 
+net rst-001        <=  key-001.rst  => rst-001.out
+net rst-0001       <=  key-0001.rst => rst-0001.out
+
+#net key-0001.out  => frtpnl.step-choice.sel0
+#net key-001.out   => frtpnl.step-choice.sel1
+#net key-01.out    => frtpnl.step-choice.sel2
+
+setp frtpnl.step-choice.in0 0
 setp frtpnl.step-choice.in1 0.001
 setp frtpnl.step-choice.in2 0.01
 setp frtpnl.step-choice.in4 0.1
@@ -117,33 +143,64 @@ net step-choice => axis.y.jog-scale
 net step-choice => axis.z.jog-scale
 
     # connect leds to buttons
-net key-01     => led-01
-net key-001    => led-001
-net key-0001   => led-001
+net led-01     <= key-01.out
+net led-01     => STM_IO.OUT.39
+net led-001    <= key-001.out
+net led-001    => STM_IO.OUT.12
+net led-0001   <= key-0001.out
+net led-0001   => STM_IO.OUT.38
 
 
 
 
-loadrt or2 names=frtpnl.sel-X,frtpnl.sel-Y,frtpnl.sel-Z
-
-addf frtpnl.sel-X   servo-thread
-addf frtpnl.sel-Y   servo-thread
-addf frtpnl.sel-Z   servo-thread
-
-net frtpnl.sel-X.in0  <=  key-X+
-net frtpnl.sel-X.in1  <=  key-X-
-
-net frtpnl.sel-Y.in0  <=  key-Y+
-net frtpnl.sel-Y.in1  <=  key-Y-
-
-net frtpnl.sel-Z.in0  <=  key-Z+
-net frtpnl.sel-Z.in1  <=  key-Z-
 
 
 
 
-net key-x <= hm2_7i92.0.TsHW.0.0.key-01
-net key-x => hm2_7i92.0.TsHW.0.0.led-01
-net key-x => shw.ena-x.in0
-net ena-x shw.ena-x.out => axis.x.jog-enable
+net key-X+     <= STM_IO.IN.38      
+net key-X+     => STM_IO.OUT.26
+net key-X+     => halui.axis.x.plus
+net key-X+     => frtpnl.sel-X.in0
+
+net key-X-     <= STM_IO.IN.10
+net key-X-     => STM_IO.OUT.24
+net key-X-     => halui.axis.x.minus
+net key-X-     => frtpnl.sel-X.in1
+
+net key-Y+     <= STM_IO.IN.14 
+net key-Y+     => STM_IO.OUT.02
+net key-Y+     => halui.axis.y.plus
+net key-Y+     => frtpnl.sel-Y.in0
+
+net key-Y-     <= STM_IO.IN.16 
+net key-Y-     => STM_IO.OUT.42
+net key-Y-     => halui.axis.y.minus
+net key-Y-     => frtpnl.sel-Y.in1
+
+net key-Z+     <= STM_IO.IN.43 
+net key-Z+     => STM_IO.OUT.33
+net key-Z+     => halui.axis.z.plus
+net key-Z+     => frtpnl.sel-Z.in0
+
+net key-Z-     <= STM_IO.IN.12 
+net key-Z-     => STM_IO.OUT.07
+net key-Z-     => halui.axis.z.minus
+net key-Z-     => frtpnl.sel-Z.in1
+
+#net key-A+     <= STM_IO.IN.42 
+#net key-A+     => STM_IO.OUT.05
+#net key-A+     => frtpnl.sel-A.in0
+
+#net key-A-     <= STM_IO.IN.39 
+#net key-A-     => STM_IO.OUT.09
+#net key-A-     => frtpnl.sel-A.in1
+
+
+
+
+
+#net key-x <= hm2_7i92.0.TsHW.0.0.key-01
+#net key-x => hm2_7i92.0.TsHW.0.0.led-01
+#net key-x => shw.ena-x.in0
+#net ena-x shw.ena-x.out => axis.x.jog-enable
 
