@@ -1,22 +1,8 @@
 
 component jogCntrl "Two-input AND gate";
-pin in bit keys.xpos
-pin in bit keys.xneg
-pin in bit keys.ypos
-pin in bit keys.yneg
-pin in bit keys.zpos
-pin in bit keys.zneg
-pin in bit keys.apos
-pin in bit keys.aneg
+pin in bit keys-# [8]
+pin in bit out-#  [8]
 pin in bit keys.joglocktoggle
-pin in bit out.xpos
-pin in bit out.xneg
-pin in bit out.ypos
-pin in bit out.yneg
-pin in bit out.zpos
-pin in bit out.zneg
-pin in bit out.apos
-pin in bit out.aneg
 pin out s32 lastActive
 
 param rw u32 debounce = 2 "debounce delay in periods";
@@ -29,7 +15,31 @@ license "GPL";
 ;;
 FUNCTION(_) {
 
-    if(keys.joglocktoggle){
+    if(keys.joglocktoggle){     //when jog-lock is active, toggle the inputs
+
+        for(int i = 0; i<8;i++){
+            if(keys(i))         
+                out(i) !=out(i)         //if a button is pressed, invert the signal
+            for(int j =0; j<8;j++){
+                if( keys(i) && (j != i) ){
+                    out(i) = 0
+                    j=8;
+                }
+
+            }
+
+
+        }
+
+
+
+
+
+
+
+
+
+
 
         if(keys.xpos)
             out.xpos = !out.xpos;
@@ -69,48 +79,19 @@ FUNCTION(_) {
 
 
 
-
-
-
     } else {
-        if(keys.xpos && ~keys.xneg)
-            out.xpos = 1;
-        else
-            out.xpos = 0;
-        if(keys.xneg && ~keys.xpos)
-            out.xneg = 1;
-        else
-            out.xneg = 0;
 
+        for(int i = 0; i < 8; i+=2) {
+        if(keys(i) && ~keys(i+1))
+            out(i) = 1;
+        else
+            out(i) = 0; 
+        if(keys(i+1) && ~keys(i))
+            out(i+1) = 1;
+        else
+            out(i+1) = 0;
 
-        if(keys.ypos && ~keys.yneg)
-           out.ypos = 1;
-        else
-            out.ypos = 0;       
-        if(keys.yneg && ~keys.ypos)
-            out.yneg = 1;
-        else
-            out.yneg = 0;
-
-
-        if(keys.zpos && ~keys.zneg)
-            out.zpos = 1;
-        else
-            out.zpos = 0;
-        if(keys.zneg && ~keys.zpos)
-            out.zneg = 1;
-        else
-            out.zneg = 0;
-
-
-        if(keys.apos && ~keys.aneg)
-            out.apos = 1;
-        else
-            out.apos = 0;   
-        if(keys.aneg && ~keys.apos)
-            out.aneg = 1;
-        else
-            out.aneg = 0;
+        }
     }
 
 
