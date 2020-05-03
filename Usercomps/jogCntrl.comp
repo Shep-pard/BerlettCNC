@@ -1,95 +1,78 @@
 
 component jogCntrl "Two-input AND gate";
-pin in bit keys-# [8]
-pin in bit out-#  [8]
-pin in bit keys.joglocktoggle
-pin out s32 lastActive
+pin in bit keys-#[8];
+pin out bit out-#[8];
+pin in bit joglocktoggle;
+pin out unsigned lastActive;
 
-param rw u32 debounce = 2 "debounce delay in periods";
+param rw unsigned debounce = 2 "debounce delay in periods";
 
 
+variable signed toggle_counter[8]   = 0;
+variable signed toggle_debounced[8] = 0;
+variable signed activeOuts = 0;
 
-;
+
 function _ nofp;
 license "GPL";
 ;;
 FUNCTION(_) {
 
-    if(keys.joglocktoggle){     //when jog-lock is active, toggle the inputs
+    if(joglocktoggle){     //when jog-lock is active, toggle the inputs
 
         for(int i = 0; i<8;i++){
-            if(keys(i))         
-                out(i) !=out(i)         //if a button is pressed, invert the signal
-            for(int j =0; j<8;j++){
-                if( keys(i) && (j != i) ){
-                    out(i) = 0
-                    j=8;
+            /* pressed */
+            if(keys(i)){
+                toggle_counter[i]++;
+                if(toggle_counter >= debounce){
+                    if(activeOuts >= 1 && lastActive != i){
+                        for(int i = 0; i<8;i++){
+                            out(i) = 0;
+                        }
+
+                        activeOuts = 0;
+                    }
+
+                    if ( toggle_debounced[i] == 0 ) {
+                        /* toggle output */
+                        out(i) = !out(i);
+                        toggle_debounced[i] = 1;
+                        if( out(i) == 1 ){
+                            lastActive = i;
+                            activeOuts++;
+                        } else {
+                            activeOuts--;
+                        }
+                    }
                 }
-
-            }
-
-
+            } else {
+                /* not pressed */
+                toggle_counter[i]--;
+                if ( toggle_counter[i] <= 0 ) {
+                    toggle_counter[i] = 0;
+                    toggle_debounced[i] = 0;
+                }
+            }   
         }
-
-
-
-
-
-
-
-
-
-
-
-        if(keys.xpos)
-            out.xpos = !out.xpos;
-        if( keys.xneg | keys.ypos | keys.yneg | keys.zpos | keys.zneg | keys.apos | keys.aneg )
-            out.xpos = 0;
-        if(keys.xneg)
-            out.xneg = !out.xneg;
-        if(keys.xpos  | keys.ypos | keys.yneg | keys.zpos | keys.zneg | keys.apos | keys.aneg )
-            out.xneg = 0;
-
-        if(keys.ypos)
-            out.ypos = !out.ypos;
-        if(keys.xpos | keys.xneg  | keys.yneg | keys.zpos | keys.zneg | keys.apos | keys.aneg )
-            out.ypos = 0;
-        if(keys.yneg)
-            out.yneg = !out.yneg;
-        if(keys.xpos | keys.xneg | keys.ypos | keys.zpos | keys.zneg | keys.apos | keys.aneg )
-            out.yneg = 0;
-
-        if(keys.zpos)
-            out.zpos = !out.zpos;
-        if(keys.xpos | keys.xneg | keys.ypos | keys.yneg  | keys.zneg | keys.apos | keys.aneg )
-            out.zpos = 0;
-        if(keys.zneg)
-            out.zneg = !out.zneg;
-        if(keys.xpos | keys.xneg | keys.ypos | keys.yneg | keys.zpos  | keys.apos | keys.aneg )
-            out.zneg = 0;
-
-        if(keys.apos)
-            out.apos = !out.apos;
-        if(keys.xpos | keys.xneg | keys.ypos | keys.yneg | keys.zpos | keys.zneg | keys.aneg )
-            out.apos = 0;
-        if(keys.xneg)
-            out.xneg = !out.xneg;
-        if(keys.xpos | keys.xneg | keys.ypos | keys.yneg | keys.zpos | keys.zneg | keys.apos )
-            out.aneg = 0;
-
-
+    
 
     } else {
 
         for(int i = 0; i < 8; i+=2) {
-        if(keys(i) && ~keys(i+1))
+        if(keys(i) && ~keys(i+1)){
             out(i) = 1;
-        else
+            lastActive = i;
+        }
+        else{
             out(i) = 0; 
-        if(keys(i+1) && ~keys(i))
+        }
+        if(keys(i+1) && ~keys(i)){
             out(i+1) = 1;
-        else
+            lastActive= i;
+        }
+        else{
             out(i+1) = 0;
+        }
 
         }
     }
