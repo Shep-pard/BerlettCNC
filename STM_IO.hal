@@ -76,7 +76,7 @@ loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/my_LinuxCNC_machine/STM_IO
 #net led-Y+      => STM_IO.OUT.02
 #net led-Z-      => STM_IO.OUT.07
 #net led-Z+      => STM_IO.OUT.33
-#net led-JogLck  => 
+#net led-JogLck  => 3
 #net led-LockX   => STM_IO.OUT.22
 #net led-LockY   => STM_IO.OUT.25
 #net led-LockZ   => STM_IO.OUT.35
@@ -101,109 +101,110 @@ loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/my_LinuxCNC_machine/STM_IO
 # setup the axis scale 
 
 
+########## Jog Setup for Buttons and Encoder wheel! ########
 
 
-loadrt or2 names=rst-01,rst-001,rst-0001,STM_IO.led-start,STM_IO.led-stop
+#Enoder wheel setup
+loadrt or2 names=jog.enc.sel-X,jog.enc.sel-Y,jog.enc.sel-Z,jog.enc.rst-01,jog.enc.rst-001,jog.enc.rst-0001,STM_IO.led-start,STM_IO.led-stop
 
-addf frtpnl.sel-X   servo-thread
-addf frtpnl.sel-Y   servo-thread
-addf frtpnl.sel-Z   servo-thread
-addf rst-01   servo-thread
-addf rst-001  servo-thread
-addf rst-0001 servo-thread
+addf jog.enc.sel-X   servo-thread
+addf jog.enc.sel-Y   servo-thread
+addf jog.enc.sel-Z   servo-thread
+addf jog.enc.rst-01   servo-thread
+addf jog.enc.rst-001  servo-thread
+addf jog.enc.rst-0001 servo-thread
 
-loadrt mux8 names=frtpnl.step-choice
-addf frtpnl.step-choice servo-thread
+loadrt mux8 names=jog.enc.step-choice
+addf jog.enc.step-choice servo-thread
 
 
-loadrt toggleRst names=key-01,key-001,key-0001
-addf key-01   servo-thread
-addf key-001  servo-thread
-addf key-0001 servo-thread
+loadrt toggleRst names=jog.enc.key-01,jog.enc.key-001,jog.enc.key-0001,axisLock.X,axisLock.Y,axisLock.Z
+addf jog.enc.key-01   servo-thread
+addf jog.enc.key-001  servo-thread
+addf jog.enc.key-0001 servo-thread
+addf axisLock.X servo-thread
+addf axisLock.Y servo-thread
+addf axisLock.Z servo-thread
 
 # connect the pysical pins to the toogle input as well as the reset or2 inputs
 
-net key-01.key     <= STM_IO.IN.36 => key-01.in   => rst-001.in0  => rst-0001.in0
-net key-001.key    <= STM_IO.IN.33 => key-001.in  => rst-01.in0   => rst-0001.in1
-net key-0001.key   <= STM_IO.IN.35 => key-0001.in => rst-01.in1   => rst-001.in1
+net jog.enc.key-01.key     <= STM_IO.IN.36 => jog.enc.key-01.in   => jog.enc.rst-001.in0  => jog.enc.rst-0001.in0
+net jog.enc.key-001.key    <= STM_IO.IN.33 => jog.enc.key-001.in  => jog.enc.rst-01.in0   => jog.enc.rst-0001.in1
+net kjog.enc.ey-0001.key   <= STM_IO.IN.35 => jog.enc.key-0001.in => jog.enc.rst-01.in1   => jog.enc.rst-001.in1
 
 #connect the toggle reset input to the or2 reset outputs
-net rst-01         <=  key-01.rst   => rst-01.out 
-net rst-001        <=  key-001.rst  => rst-001.out
-net rst-0001       <=  key-0001.rst => rst-0001.out
+net jog.enc.rst-01         <=  jog.enc.key-01.rst   => jog.enc.rst-01.out 
+net jog.enc.rst-001        <=  jog.enc.key-001.rst  => jog.enc.rst-001.out
+net rjog.enc.st-0001       <=  jog.enc.key-0001.rst => jog.enc.rst-0001.out
 
-net led-0001.out  => frtpnl.step-choice.sel0
-net led-001.out   => frtpnl.step-choice.sel1
-net led-01.out    => frtpnl.step-choice.sel2
+# step choices for the encoder wheel
+setp jog.enc.step-choice.in0 0
+setp jog.enc.step-choice.in1 0.001
+setp jog.enc.step-choice.in2 0.01
+setp jog.enc.step-choice.in4 0.1
 
-setp frtpnl.step-choice.in0 0
-setp frtpnl.step-choice.in1 0.001
-setp frtpnl.step-choice.in2 0.01
-setp frtpnl.step-choice.in4 0.1
+# encoder scale is set for all axis
+net jog.enc.step-choice <= jog.enc.step-choice.out
+net jog.enc.step-choice => axis.x.jog-scale
+net jog.enc.step-choice => axis.y.jog-scale
+net jog.enc.step-choice => axis.z.jog-scale
 
-net step-choice <= frtpnl.step-choice.out
-net step-choice => axis.x.jog-scale
-net step-choice => axis.y.jog-scale
-net step-choice => axis.z.jog-scale
+# enable the active axis
+net jog.enc.ena-x <= jog.enc.sel-X.out => axis.x.jog-enable
+net jog.enc.ena-y <= jog.enc.sel-Y.out => axis.y.jog-enable
+net jog.enc.ena-z <= jog.enc.sel-Z.out => axis.z.jog-enable
 
-# connect leds to buttons
-#net led-01     <= key-01.out
-#net led-01     => STM_IO.OUT.39
-#net led-001    <= key-001.out
-#net led-001    => STM_IO.OUT.12
-#net led-0001   <= key-0001.out
-#net led-0001   => STM_IO.OUT.38
-
-net key-01     <= key-01.out
-net key-01     => STM_IO.OUT.39
-net key-001    <= key-001.out
-net key-001    => STM_IO.OUT.12
-net key-0001   <= key-0001.out
-net key-0001   => STM_IO.OUT.38
+# connect leds and the step choice to the toggle outputs
+net jog.enc.led-01     <= jog.enc.key-01.out        => jog.enc.step-choice.sel0
+net jog.enc.led-01     => STM_IO.OUT.39
+net jog.enc.led-001    <= jog.enc.key-001.out       => jog.enc.step-choice.sel1
+net jog.enc.led-001    => STM_IO.OUT.12
+net jog.enc.led-0001   <= jog.enc.key-0001.out      => jog.enc.step-choice.sel2
+net jog.enc.led-0001   => STM_IO.OUT.38
 
 
 
 
-# Jog command setup
+# Jog button setup
 
-loadrt  jogCntrl
-addf    jogCntrl        servo-thread
+#component for jogLock button
+loadrt  jogCntrl names=jog.jogCntrl
+addf    jog.jogCntrl        servo-thread
 
-loadrt  debounce cfg=8
-setp    debounce.0.delay 20
-addf    debounce.0      servo-thread
-
-
-
-
-net jog.raw.key-x-pos       <= STM_IO.IN.38     => debounce.0.0.in
-net jog.raw.key-x-neg       <= STM_IO.IN.10     => debounce.0.1.in
-net jog.raw.key-y-pos       <= STM_IO.IN.14     => debounce.0.2.in
-net jog.raw.key-y-neg       <= STM_IO.IN.16     => debounce.0.3.in
-net jog.raw.key-z-pos       <= STM_IO.IN.43     => debounce.0.4.in
-net jog.raw.key-z-neg       <= STM_IO.IN.12     => debounce.0.5.in
-net jog.raw.key-a-pos       <= STM_IO.IN.42     => debounce.0.6.in
-net jog.raw.key-a-neg       <= STM_IO.IN.39     => debounce.0.7.in
+# jog lock is toggled externally
+loadrt toggle names=jog.jockLock
+addf jog.jockLock servo-thread
 
 
-net jog.deb.key-x-pos       <= debounce.0.0.out => jogCntrl.keys.xpos
-net jog.deb.key-x-neg       <= debounce.0.1.out => jogCntrl.keys.xneg
-net jog.deb.key-y-pos       <= debounce.0.2.out => jogCntrl.keys.ypos
-net jog.deb.key-y-neg       <= debounce.0.3.out => jogCntrl.keys.yneg
-net jog.deb.key-z-pos       <= debounce.0.4.out => jogCntrl.keys.zpos
-net jog.deb.key-z-neg       <= debounce.0.5.out => jogCntrl.keys.zneg
-net jog.deb.key-a-pos       <= debounce.0.6.out => jogCntrl.keys.apos
-net jog.deb.key-a-neg       <= debounce.0.7.out => jogCntrl.keys.aneg
+# save last selected axis for the encoder wheel axis select
+loadrt select8 names=jog.select
+addf jog.select servo-thread
 
 
-net jog.out.key-x-pos       <= jogCntrl.out.xpos    => halui.axis.x.plus
-net jog.out.key-x-neg       <= jogCntrl.out.xneg    => halui.axis.x.minus
-net jog.out.key-y-pos       <= jogCntrl.out.ypos    => halui.axis.y.plus
-net jog.out.key-y-neg       <= jogCntrl.out.yneg    => halui.axis.y.minus
-net jog.out.key-z-pos       <= jogCntrl.out.zpos    => halui.axis.z.plus
-net jog.out.key-z-neg       <= jogCntrl.out.zneg    => halui.axis.z.minus
-net jog.out.key-a-pos       <= jogCntrl.out.apos    #=> halui.axis.a.plus
-net jog.out.key-a-neg       <= jogCntrl.out.aneg    #=> halui.axis.a.minus
+# connect the buttons to the jog Lock component
+net jog.jockLock  <= STM_IO.IN.34 => jog.jockLock.in
+
+net jog.raw.key-x-pos       <= STM_IO.IN.38         => jog.jogCntrl.keys-0
+net jog.raw.key-x-neg       <= STM_IO.IN.10         => jog.jogCntrl.keys-1
+net jog.raw.key-y-pos       <= STM_IO.IN.14         => jog.jogCntrl.keys-2
+net jog.raw.key-y-neg       <= STM_IO.IN.16         => jog.jogCntrl.keys-3
+net jog.raw.key-z-pos       <= STM_IO.IN.43         => jog.jogCntrl.keys-4
+net jog.raw.key-z-neg       <= STM_IO.IN.12         => jog.jogCntrl.keys-5
+net jog.raw.key-a-pos       <= STM_IO.IN.42         => jog.jogCntrl.keys-6
+net jog.raw.key-a-neg       <= STM_IO.IN.39         => jog.jogCntrl.keys-7
+net jog.raw.jogLock         <= jog.jockLock.out     => jog.jogCntrl.joglocktoggle   => STM_IO.OUT.32
+
+
+
+
+net jog.out.key-x-pos       <= jog.jogCntrl.out-0   
+net jog.out.key-x-neg       <= jog.jogCntrl.out-1   
+net jog.out.key-y-pos       <= jog.jogCntrl.out-2  
+net jog.out.key-y-neg       <= jog.jogCntrl.out-3   
+net jog.out.key-z-pos       <= jog.jogCntrl.out-4   
+net jog.out.key-z-neg       <= jog.jogCntrl.out-5   
+net jog.out.key-a-pos       <= jog.jogCntrl.out-6   
+net jog.out.key-a-neg       <= jog.jogCntrl.out-7   
 
 
 net jog.out.key-x-pos       => STM_IO.OUT.26
@@ -216,34 +217,41 @@ net jog.out.key-a-pos       => STM_IO.OUT.05
 net jog.out.key-a-neg       => STM_IO.OUT.09
 
 
-loadrt select8 
-addf select8  servo-thread
 
-net jog.lastAxis.data       <= jogCntrl.lastActive => select8.0.sel
+# jogLock outputs the last selected axis. Use this for the encoder wheel axis select thorugh ors.
 
+net jog.lastAxis.data       <= jog.jogCntrl.lastActive => jog.select.sel
 
+net jog.enc.sel-X-IN0       <= jog.select.out0      => jog.enc.sel-X.in0 
+net jog.enc.sel-X-IN1       <= jog.select.out1      => jog.enc.sel-X.in1 
 
+net jog.enc.sel-Y-IN0       <= jog.select.out2      => jog.enc.sel-Y.in0 
+net jog.enc.sel-Y-IN1       <= jog.select.out3      => jog.enc.sel-Y.in1 
 
-
-
-#net key-x <= hm2_7i92.0.TsHW.0.0.key-01
-#net key-x => hm2_7i92.0.TsHW.0.0.led-01
-#net key-x => shw.ena-x.in0
-#net ena-x shw.ena-x.out => axis.x.jog-enable
-
+net jog.enc.sel-Z-IN0       <= jog.select.out4      => jog.enc.sel-Z.in0 
+net jog.enc.sel-Z-IN1       <= jog.select.out5      => jog.enc.sel-Z.in1 
 
 
 
+############# Axis Lock Control ###############
+
+net axisLock.X.IN            <= STM_IO.IN.24        =>  axisLock.X.in
+net axisLock.Y.IN            <= STM_IO.IN.40        =>  axisLock.Y.in
+net axisLock.Z.IN            <= STM_IO.IN.11        =>  axisLock.Z.in
+
+# net axisLock.X.rst        
+# all axisLock resets are connected to halui.program.is-running
+
+net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.22   => hm2_5i25.0.7i77.0.0.output-04
+net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.25   => hm2_5i25.0.7i77.0.0.output-05
+net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.35   => hm2_5i25.0.7i77.0.0.output-06
 
 
 
 
 
 
-
-
-
-
+################# Program Start stop pause setup ###################
 # program start pause resume stop with two buttons
 loadrt lut5 names=STM_IO.start.lut,STM_IO.pause.lut,STM_IO.resume.lut
 addf STM_IO.start.lut    servo-thread
@@ -257,11 +265,11 @@ setp STM_IO.resume.lut.function  0x2000000  # resume when paused. Button & is-is
 
 
 #inputs for the lut5 
-net  STM_IO.start.IN0      <= STM_IO.IN.09              => STM_IO.start.lut.in0  => STM_IO.pause.lut.in0  => STM_IO.resume.lut.in0
-net  STM_IO.start.IN1      <= halui.program.is−idle     => STM_IO.start.lut.in1  => STM_IO.pause.lut.in1  => STM_IO.resume.lut.in1
-net  STM_IO.start.IN2      <= halui.program.is−running  => STM_IO.start.lut.in2  => STM_IO.pause.lut.in2  => STM_IO.resume.lut.in2
-net  STM_IO.start.IN3      <= halui.program.is-auto     => STM_IO.start.lut.in3  => STM_IO.pause.lut.in3  => STM_IO.resume.lut.in3
-net  STM_IO.start.IN4      <= halui.program.is−paused   => STM_IO.start.lut.in3  => STM_IO.pause.lut.in4  => STM_IO.resume.lut.in4
+net  STM_IO.start.IN0      <= STM_IO.IN.09              => STM_IO.start.lut.in-0  => STM_IO.pause.lut.in-0  => STM_IO.resume.lut.in-0
+net  STM_IO.start.IN1      <= halui.program.is-idle     => STM_IO.start.lut.in-1  => STM_IO.pause.lut.in-1  => STM_IO.resume.lut.in-1   => STM_IO.led-stop.in1
+net  STM_IO.start.IN2      <= halui.program.is-running  => STM_IO.start.lut.in-2  => STM_IO.pause.lut.in-2  => STM_IO.resume.lut.in-2   => STM_IO.led-start.in0 => axisLock.X.rst   => axisLock.Y.rst   => axisLock.Z.rst 
+net  STM_IO.start.IN3      <= halui.mode.is-auto        => STM_IO.start.lut.in-3  => STM_IO.pause.lut.in-3  => STM_IO.resume.lut.in-3
+net  STM_IO.start.IN4      <= halui.program.is-paused   => STM_IO.start.lut.in-4  => STM_IO.pause.lut.in-4  => STM_IO.resume.lut.in-4   => STM_IO.led-start.in1 => STM_IO.led-stop.in0
 
 #start program when lut1 is true
 net  STM_IO.start.OUT      <= STM_IO.start.lut.out
@@ -274,21 +282,15 @@ net  STM_IO.pause.OUT      => halui.program.pause
 net  STM_IO.resume.OUT      <= STM_IO.resume.lut.out
 net  STM_IO.resume.OUT      => halui.program.resume 
 
-
 #stop program when stop is pressed
 net  STM_IO.stop      <= STM_IO.IN.01
 net  STM_IO.stop      => halui.program.stop
 
-
 #led start is on during running and paused
-net STM_IO.led-start.IN0   <= halui.program.is−running   => STM_IO.led-start.in0
-net STM_IO.led-start.IN1   <= halui.program.is−paused    => STM_IO.led-start.in1
 net STM_IO.led-start       <= STM_IO.led-start.out
 net STM_IO.led-start       => STM_IO.OUT.17
 
 #led stop is on during idle and paused
-net STM_IO.led-stop.IN0   <= halui.program.is−paused   => STM_IO.led-stop.in0
-net STM_IO.led-stop.IN1   <= halui.program.is−idle    => STM_IO.led-stop.in1
 net STM_IO.led-stop       <= STM_IO.led-stop.out
 net STM_IO.led-stop       => STM_IO.OUT.16
 

@@ -3,7 +3,7 @@ component jogCntrl "Two-input AND gate";
 pin in bit keys-#[8];
 pin out bit out-#[8];
 pin in bit joglocktoggle;
-pin out unsigned lastActive;
+pin out signed lastActive;
 
 param rw unsigned debounce = 2 "debounce delay in periods";
 
