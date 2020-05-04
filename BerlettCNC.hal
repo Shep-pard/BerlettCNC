@@ -62,10 +62,10 @@ net max-home-z     <=  hm2_5i25.0.7i77.0.0.input-20-not
 net min-z     <=  hm2_5i25.0.7i77.0.0.input-21-not
 
 # --- CYCLE-START ---
-net cycle-start     <=  hm2_5i25.0.7i77.0.0.input-22
+#net cycle-start     <=  hm2_5i25.0.7i77.0.0.input-22
 
-# --- ABORT ---
-net abort     <=  hm2_5i25.0.7i77.0.0.input-23
+## --- ABORT ---
+#net abort     <=  hm2_5i25.0.7i77.0.0.input-23
 
 # --- ESTOP-EXT ---
 net estop-ext     <=  hm2_5i25.0.7i77.0.0.input-24
@@ -295,7 +295,7 @@ net spindle-manual-cw     halui.spindle.0.forward
 net spindle-manual-ccw    halui.spindle.0.reverse
 net spindle-manual-stop   halui.spindle.0.stop
 net machine-is-on         halui.machine.is-on
-net jog-speed             halui.axis.jog-speed
+#net jog-speed             halui.axis.jog-speed
 net MDI-mode              halui.mode.is-mdi
 
 #  ---coolant signals---

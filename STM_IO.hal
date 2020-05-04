@@ -97,7 +97,14 @@ loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/my_LinuxCNC_machine/STM_IO
 
 ####### rt components #######
 
-loadrt or2 names=jog.enc.sel-X,jog.enc.sel-Y,jog.enc.sel-Z,jog.enc.rst-01,jog.enc.rst-001,jog.enc.rst-0001,STM_IO.led-start,STM_IO.led-stop
+loadrt not names=STM_IO.toolchg.not
+addf STM_IO.toolchg.not   servo-thread
+
+
+loadrt and2 names=STM_IO.toolchg.and
+addf STM_IO.toolchg.and   servo-thread
+
+loadrt or2 names=jog.enc.sel-X,jog.enc.sel-Y,jog.enc.sel-Z,jog.enc.rst-01,jog.enc.rst-001,jog.enc.rst-0001,STM_IO.led-start,STM_IO.led-stop,STM_IO.toolchg.or
 
 addf jog.enc.sel-X   servo-thread
 addf jog.enc.sel-Y   servo-thread
@@ -105,6 +112,8 @@ addf jog.enc.sel-Z   servo-thread
 addf jog.enc.rst-01   servo-thread
 addf jog.enc.rst-001  servo-thread
 addf jog.enc.rst-0001 servo-thread
+addf STM_IO.toolchg.or servo-thread
+
 
 loadrt mux8 names=jog.enc.step-choice
 addf jog.enc.step-choice servo-thread
@@ -118,6 +127,10 @@ addf axisLock.X servo-thread
 addf axisLock.Y servo-thread
 addf axisLock.Z servo-thread
 
+# jog lock is toggled externally
+loadrt toggle names=jog.jockLock,STM_IO.toolchg
+addf jog.jockLock   servo-thread
+addf STM_IO.toolchg servo-thread
 
 # encoder smoothing 
 loadrt ilowpass names=jog.enc.enc-smooth,jog.pot,STM_IO.feedPot
@@ -136,7 +149,35 @@ setp STM_IO.feedPot.scale 1
 setp STM_IO.feedPot.gain  0.025
 
 
+loadrt conv_float_s32 names=conv_float_s32.feed,conv_float_s32.spindel,conv_float_s32.jog
+addf conv_float_s32.feed servo-thread
+addf conv_float_s32.spindel servo-thread
+addf conv_float_s32.jog servo-thread
 
+setp halui.feed-override.scale 0.01
+setp halui.feed-override.direct-value true
+setp hm2_5i25.0.7i77.0.0.analogin1-scalemax 230
+net halui.feedanalog <= hm2_5i25.0.7i77.0.0.analogin1 => conv_float_s32.feed.in
+net feedanalog conv_float_s32.feed.out => halui.feed-override.counts
+
+setp halui.spindle.0.override.scale 0.01
+setp halui.spindle.0.override.direct-value true
+setp hm2_5i25.0.7i77.0.0.analogin2-scalemax 230
+net halui.spindelanalog <= hm2_5i25.0.7i77.0.0.analogin2 => conv_float_s32.spindel.in
+net spindelanalog conv_float_s32.spindel.out => halui.spindle.0.override.counts
+
+#setp halui.feed-override.scale 0.01
+#setp halui.feed-override.direct-value true
+#setp hm2_5i25.0.7i77.0.0.analogin1-scalemax 230
+#net halui.joganalog <= hm2_5i25.0.7i77.0.0.analogin1 => conv_float_s32.jog.in
+#net joganalog conv_float_s32.jog.out => halui.axis.jog-speed
+
+
+
+#net STM_IO.feedPot.raw      <= hm2_5i25.0.7i77.0.0.analogin0 => STM_IO.feedPot.in
+#net STM_IO.feedPot          <= STM_IO.feedPot.out            => halui.spindle-override.value
+
+#setp halui.spindle-override.direct-value 1
 
 
 ########## Jog Setup for Buttons and Encoder wheel! ########
@@ -171,7 +212,7 @@ net jog.enc.step-choice => axis.z.jog-scale
 
 
 
-net jog.enc.jogCounts.raw <=jog.enc.enc-smooth.in   <= hm2_5i25.0.encoder.2.counts
+net jog.enc.jogCounts.raw <= hm2_5i25.0.encoder.02.count     => jog.enc.enc-smooth.in
 
 net jog.enc.jogCounts   <= jog.enc.enc-smooth.out
 net jog.enc.jogCounts   => axis.x.jog-counts
@@ -208,9 +249,7 @@ net jog.enc.led-0001   => STM_IO.OUT.38
 loadrt  jogCntrl names=jog.jogCntrl
 addf    jog.jogCntrl        servo-thread
 
-# jog lock is toggled externally
-loadrt toggle names=jog.jockLock
-addf jog.jockLock servo-thread
+
 
 
 # save last selected axis for the encoder wheel axis select
@@ -282,11 +321,11 @@ net axisLock.Z.IN            <= STM_IO.IN.11        =>  axisLock.Z.in
 # net axisLock.X.rst        
 # all axisLock resets are connected to halui.program.is-running
 
-net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.22   => hm2_5i25.0.7i77.0.0.output-04    =>  jog.jogCntrl.lock-01
-net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.25   => hm2_5i25.0.7i77.0.0.output-05    =>  jog.jogCntrl.lock-02
-net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.35   => hm2_5i25.0.7i77.0.0.output-06    =>  jog.jogCntrl.lock-03
+net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.22   => hm2_5i25.0.7i77.0.0.output-04    =>  jog.jogCntrl.lock-0
+net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.25   => hm2_5i25.0.7i77.0.0.output-05    =>  jog.jogCntrl.lock-1
+net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.35   => hm2_5i25.0.7i77.0.0.output-06    =>  jog.jogCntrl.lock-2
 
-setp jog.jogCntrl.lock-04 = 0 # fourth axis has no lock
+setp jog.jogCntrl.lock-3 0 # fourth axis has no lock
 
 
 
@@ -298,17 +337,17 @@ addf STM_IO.pause.lut    servo-thread
 addf STM_IO.resume.lut   servo-thread
 
 
-setp STM_IO.start.lut.function   0x800      # Start program. Button & is-idle & is-auto have to be true
+setp STM_IO.start.lut.function   0x8        # Start program. Button & is-idle & is-auto have to be true
 setp STM_IO.pause.lut.function   0x2000     # pause when running. Button & is-running   & is-auto
 setp STM_IO.resume.lut.function  0x2000000  # resume when paused. Button & is-is−paused & is-auto
 
 
 #inputs for the lut5 
-net  STM_IO.start.IN0      <= STM_IO.IN.09              => STM_IO.start.lut.in-0  => STM_IO.pause.lut.in-0  => STM_IO.resume.lut.in-0
-net  STM_IO.start.IN1      <= halui.program.is-idle     => STM_IO.start.lut.in-1  => STM_IO.pause.lut.in-1  => STM_IO.resume.lut.in-1   => STM_IO.led-stop.in1
-net  STM_IO.start.IN2      <= halui.program.is-running  => STM_IO.start.lut.in-2  => STM_IO.pause.lut.in-2  => STM_IO.resume.lut.in-2   => STM_IO.led-start.in0 => axisLock.X.rst   => axisLock.Y.rst   => axisLock.Z.rst 
-net  STM_IO.start.IN3      <= halui.mode.is-auto        => STM_IO.start.lut.in-3  => STM_IO.pause.lut.in-3  => STM_IO.resume.lut.in-3
-net  STM_IO.start.IN4      <= halui.program.is-paused   => STM_IO.start.lut.in-4  => STM_IO.pause.lut.in-4  => STM_IO.resume.lut.in-4   => STM_IO.led-start.in1 => STM_IO.led-stop.in0
+net  STM_IO.start.IN0      <= hm2_5i25.0.7i77.0.0.input-23 => STM_IO.start.lut.in-0  => STM_IO.pause.lut.in-0  => STM_IO.resume.lut.in-0
+net  STM_IO.start.IN1      <= halui.program.is-idle      => STM_IO.start.lut.in-1  => STM_IO.pause.lut.in-1  => STM_IO.resume.lut.in-1   => STM_IO.led-stop.in1  
+net  STM_IO.start.IN2      <= halui.program.is-running   => STM_IO.start.lut.in-2  => STM_IO.pause.lut.in-2  => STM_IO.resume.lut.in-2   => STM_IO.led-start.in0 => axisLock.X.rst   => axisLock.Y.rst   => axisLock.Z.rst 
+net  STM_IO.start.IN3      <= halui.mode.is-auto         => STM_IO.start.lut.in-3  => STM_IO.pause.lut.in-3  => STM_IO.resume.lut.in-3
+net  STM_IO.start.IN4      <= halui.program.is-paused    => STM_IO.start.lut.in-4  => STM_IO.pause.lut.in-4  => STM_IO.resume.lut.in-4   => STM_IO.led-start.in1 => STM_IO.led-stop.in0
 
 #start program when lut1 is true
 net  STM_IO.start.OUT      <= STM_IO.start.lut.out
@@ -322,7 +361,7 @@ net  STM_IO.resume.OUT      <= STM_IO.resume.lut.out
 net  STM_IO.resume.OUT      => halui.program.resume 
 
 #stop program when stop is pressed
-net  STM_IO.stop      <= STM_IO.IN.01
+net  STM_IO.stop      <= hm2_5i25.0.7i77.0.0.input-22
 net  STM_IO.stop      => halui.program.stop
 
 #led start is on during running and paused
@@ -336,9 +375,30 @@ net STM_IO.led-stop       => STM_IO.OUT.16
 
 
 
+net spindle-manual-cw       <= STM_IO.IN.23 
+net STM_IO.led-spindle-cw   <= halui.spindle.0.runs-forward     => STM_IO.toolchg.or.in0
+net STM_IO.led-spindle-cw   => STM_IO.OUT.06
+
+net spindle-manual-ccw      <= STM_IO.IN.15
+net STM_IO.led-spindle-ccw   <= halui.spindle.0.runs-backward   => STM_IO.toolchg.or.in1
+net STM_IO.led-spindle-ccw   => STM_IO.OUT.18
+
+net spindle-manual-stop     <= STM_IO.IN.46
+net spindle-manual-stop     => STM_IO.OUT.01
 
 
 
+net STM_IO.clearMsg         <= STM_IO.IN.44
+#net STM_IO.clearMsg         => axisui.notifications-clear
+net STM_IO.clearMsg         => STM_IO.OUT.04
+
+
+
+net STM_IO.toolchg.or.OUT       <= STM_IO.toolchg.or.out    => STM_IO.toolchg.not.in
+net STM_IO.toolchg.not.OUT      <=  STM_IO.toolchg.not.out  => STM_IO.toolchg.and.in0
+net STM_IO.toolchg.and.IN1      <= STM_IO.IN.26             => STM_IO.toolchg.and.in1
+net STM_IO.toolchg.and.OUT      <=  STM_IO.toolchg.and.out  => STM_IO.toolchg.in
+net STM_IO.toolchg              <= STM_IO.toolchg.out       =>  STM_IO.OUT.15           => hm2_5i25.0.7i77.0.0.output-08
 
 
 
