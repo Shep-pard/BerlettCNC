@@ -1,0 +1,35 @@
+.TH JOGCNTRL "9" "2020-05-04" "LinuxCNC Documentation" "HAL Component"
+.de TQ
+.br
+.ns
+.TP \\$1
+..
+
+.SH NAME
+
+jogCntrl \- Two-input AND gate
+.SH SYNOPSIS
+.HP
+.B loadrt jogCntrl [count=\fIN\fB|names=\fIname1\fB[,\fIname2...\fB]]
+.SH FUNCTIONS
+.TP
+\fBjogCntrl.\fIN\fB\fR
+
+.SH PINS
+.TP
+.B jogCntrl.\fIN\fB.keys-\fIM\fB\fR bit in  (M=0..7) \fR
+.TQ
+.B jogCntrl.\fIN\fB.out-\fIM\fB\fR bit out  (M=0..7) \fR
+.TQ
+.B jogCntrl.\fIN\fB.lock-\fIM\fB\fR bit in  (M=0..3) \fR
+.TQ
+.B jogCntrl.\fIN\fB.joglocktoggle\fR bit in \fR
+.TQ
+.B jogCntrl.\fIN\fB.lastActive\fR s32 out \fR
+.SH PARAMETERS
+.TP
+.B jogCntrl.\fIN\fB.debounce\fR u32 rw \fR(default: \fI2\fR)
+debounce delay in periods
+.SH LICENSE
+
+GPL
