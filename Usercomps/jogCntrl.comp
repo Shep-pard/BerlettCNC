@@ -2,6 +2,7 @@
 component jogCntrl "Two-input AND gate";
 pin in bit keys-#[8];
 pin out bit out-#[8];
+pin in bit lock-#[4];
 pin in bit joglocktoggle;
 pin out signed lastActive;
 
@@ -22,7 +23,7 @@ FUNCTION(_) {
 
         for(int i = 0; i<8;i++){
             /* pressed */
-            if(keys(i)){
+            if(keys(i) && ~(lock(i/2))){
                 toggle_counter[i]++;
                 if(toggle_counter >= debounce){
                     if(activeOuts >= 1 && lastActive != i){
@@ -58,15 +59,15 @@ FUNCTION(_) {
 
     } else {
 
-        for(int i = 0; i < 8; i+=2) {
-        if(keys(i) && ~keys(i+1)){
+        for(int i = 0; i < 8; i = i + 2) {
+        if(keys(i) && ~(keys(i+1) ) && ~(lock(i/2)) ){
             out(i) = 1;
             lastActive = i;
         }
         else{
             out(i) = 0; 
         }
-        if(keys(i+1) && ~keys(i)){
+        if(keys(i+1) && (~keys(i)) && ~(lock(i/2)) ){
             out(i+1) = 1;
             lastActive= i;
         }

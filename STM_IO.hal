@@ -95,16 +95,8 @@ loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/my_LinuxCNC_machine/STM_IO
 #net led-Spare6  => STM_IO.OUT.10
 #net led-Spare7  => STM_IO.OUT.45
 
+####### rt components #######
 
-
-
-# setup the axis scale 
-
-
-########## Jog Setup for Buttons and Encoder wheel! ########
-
-
-#Enoder wheel setup
 loadrt or2 names=jog.enc.sel-X,jog.enc.sel-Y,jog.enc.sel-Z,jog.enc.rst-01,jog.enc.rst-001,jog.enc.rst-0001,STM_IO.led-start,STM_IO.led-stop
 
 addf jog.enc.sel-X   servo-thread
@@ -125,6 +117,33 @@ addf jog.enc.key-0001 servo-thread
 addf axisLock.X servo-thread
 addf axisLock.Y servo-thread
 addf axisLock.Z servo-thread
+
+
+# encoder smoothing 
+loadrt ilowpass names=jog.enc.enc-smooth,jog.pot,STM_IO.feedPot
+addf jog.enc.enc-smooth servo-thread
+addf jog.pot            servo-thread
+addf STM_IO.feedPot           servo-thread
+
+
+setp jog.enc.enc-smooth.scale 1
+setp jog.enc.enc-smooth.gain  0.025
+
+setp jog.pot.scale 1
+setp jog.pot.gain  0.025
+
+setp STM_IO.feedPot.scale 1
+setp STM_IO.feedPot.gain  0.025
+
+
+
+
+
+########## Jog Setup for Buttons and Encoder wheel! ########
+
+
+#Enoder wheel setup
+
 
 # connect the pysical pins to the toogle input as well as the reset or2 inputs
 
@@ -148,11 +167,29 @@ net jog.enc.step-choice <= jog.enc.step-choice.out
 net jog.enc.step-choice => axis.x.jog-scale
 net jog.enc.step-choice => axis.y.jog-scale
 net jog.enc.step-choice => axis.z.jog-scale
+#net jog.enc.step-choice => axis.a.jog-scale
+
+
+
+net jog.enc.jogCounts.raw <=jog.enc.enc-smooth.in   <= hm2_5i25.0.encoder.2.counts
+
+net jog.enc.jogCounts   <= jog.enc.enc-smooth.out
+net jog.enc.jogCounts   => axis.x.jog-counts
+net jog.enc.jogCounts   => axis.y.jog-counts
+net jog.enc.jogCounts   => axis.z.jog-counts
+#net jog.enc.jogCounts   => axis.a.jog-counts
+
+
+setp axis.x.jog-vel-mode 1
+setp axis.y.jog-vel-mode 1
+setp axis.z.jog-vel-mode 1
+
 
 # enable the active axis
-net jog.enc.ena-x <= jog.enc.sel-X.out => axis.x.jog-enable
-net jog.enc.ena-y <= jog.enc.sel-Y.out => axis.y.jog-enable
-net jog.enc.ena-z <= jog.enc.sel-Z.out => axis.z.jog-enable
+net jog.enc.ena-x <= jog.enc.sel-X.out => axis.x.jog-enable => halui.joint.0.select
+net jog.enc.ena-y <= jog.enc.sel-Y.out => axis.y.jog-enable => halui.joint.1.select
+net jog.enc.ena-z <= jog.enc.sel-Z.out => axis.z.jog-enable => halui.joint.2.select
+#net jog.enc.ena-a <= jog.enc.sel-A.out => axis.a.jog-enable => halui.joint.3.select
 
 # connect leds and the step choice to the toggle outputs
 net jog.enc.led-01     <= jog.enc.key-01.out        => jog.enc.step-choice.sel0
@@ -195,8 +232,6 @@ net jog.raw.key-a-neg       <= STM_IO.IN.39         => jog.jogCntrl.keys-7
 net jog.raw.jogLock         <= jog.jockLock.out     => jog.jogCntrl.joglocktoggle   => STM_IO.OUT.32
 
 
-
-
 net jog.out.key-x-pos       <= jog.jogCntrl.out-0   
 net jog.out.key-x-neg       <= jog.jogCntrl.out-1   
 net jog.out.key-y-pos       <= jog.jogCntrl.out-2  
@@ -215,6 +250,11 @@ net jog.out.key-z-pos       => STM_IO.OUT.33
 net jog.out.key-z-neg       => STM_IO.OUT.07
 net jog.out.key-a-pos       => STM_IO.OUT.05
 net jog.out.key-a-neg       => STM_IO.OUT.09
+
+
+
+
+
 
 
 
@@ -242,12 +282,11 @@ net axisLock.Z.IN            <= STM_IO.IN.11        =>  axisLock.Z.in
 # net axisLock.X.rst        
 # all axisLock resets are connected to halui.program.is-running
 
-net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.22   => hm2_5i25.0.7i77.0.0.output-04
-net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.25   => hm2_5i25.0.7i77.0.0.output-05
-net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.35   => hm2_5i25.0.7i77.0.0.output-06
+net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.22   => hm2_5i25.0.7i77.0.0.output-04    =>  jog.jogCntrl.lock-01
+net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.25   => hm2_5i25.0.7i77.0.0.output-05    =>  jog.jogCntrl.lock-02
+net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.35   => hm2_5i25.0.7i77.0.0.output-06    =>  jog.jogCntrl.lock-03
 
-
-
+setp jog.jogCntrl.lock-04 = 0 # fourth axis has no lock
 
 
 
