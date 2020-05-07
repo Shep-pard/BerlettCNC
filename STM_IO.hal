@@ -281,12 +281,12 @@ net jog.out.key-a-pos       <= jog.jogCntrl.out-6
 net jog.out.key-a-neg       <= jog.jogCntrl.out-7   
 
 
-net jog.out.key-x-pos       => STM_IO.OUT.26
-net jog.out.key-x-neg       => STM_IO.OUT.24
-net jog.out.key-y-pos       => STM_IO.OUT.02
-net jog.out.key-y-neg       => STM_IO.OUT.42
-net jog.out.key-z-pos       => STM_IO.OUT.33
-net jog.out.key-z-neg       => STM_IO.OUT.07
+net jog.out.key-x-pos       => STM_IO.OUT.26        => halui.axis.x.plus
+net jog.out.key-x-neg       => STM_IO.OUT.24        => halui.axis.x.minus
+net jog.out.key-y-pos       => STM_IO.OUT.02        => halui.axis.y.plus
+net jog.out.key-y-neg       => STM_IO.OUT.42        => halui.axis.y.minus
+net jog.out.key-z-pos       => STM_IO.OUT.33        => halui.axis.z.plus
+net jog.out.key-z-neg       => STM_IO.OUT.07        => halui.axis.z.minus
 net jog.out.key-a-pos       => STM_IO.OUT.05
 net jog.out.key-a-neg       => STM_IO.OUT.09
 
