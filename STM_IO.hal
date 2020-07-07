@@ -166,10 +166,10 @@ setp hm2_5i25.0.7i77.0.0.analogin2-scalemax 230
 net halui.spindelanalog <= hm2_5i25.0.7i77.0.0.analogin2 => conv_float_s32.spindel.in
 net spindelanalog conv_float_s32.spindel.out => halui.spindle.0.override.counts
 
-#setp halui.feed-override.scale 0.01
-#setp halui.feed-override.direct-value true
-#setp hm2_5i25.0.7i77.0.0.analogin1-scalemax 230
-#net halui.joganalog <= hm2_5i25.0.7i77.0.0.analogin1 => conv_float_s32.jog.in
+setp halui.feed-override.scale 0.01
+setp halui.feed-override.direct-value true
+setp hm2_5i25.0.7i77.0.0.analogin0-scalemax 8000
+net halui.joganalog <= hm2_5i25.0.7i77.0.0.analogin0 => halui.axis.jog-speed
 #net joganalog conv_float_s32.jog.out => halui.axis.jog-speed
 
 
