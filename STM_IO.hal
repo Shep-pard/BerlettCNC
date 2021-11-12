@@ -1,6 +1,6 @@
 
 #First load the Python user module
-loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/my_LinuxCNC_machine/STM_IO
+loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/BerlettCNC/STM_IO
 
 #Second 'unlinkp' our pins to make them available for use.
 # Then use 'net' to recreate/hook into them.
@@ -168,7 +168,7 @@ net spindelanalog conv_float_s32.spindel.out => halui.spindle.0.override.counts
 
 setp halui.feed-override.scale 0.01
 setp halui.feed-override.direct-value true
-setp hm2_5i25.0.7i77.0.0.analogin0-scalemax 8000
+setp hm2_5i25.0.7i77.0.0.analogin0-scalemax 6000
 net halui.joganalog <= hm2_5i25.0.7i77.0.0.analogin0 => halui.axis.jog-speed
 #net joganalog conv_float_s32.jog.out => halui.axis.jog-speed
 
@@ -188,9 +188,9 @@ net halui.joganalog <= hm2_5i25.0.7i77.0.0.analogin0 => halui.axis.jog-speed
 
 # connect the pysical pins to the toogle input as well as the reset or2 inputs
 
-net jog.enc.key-01.key     <= STM_IO.IN.36 => jog.enc.key-01.in   => jog.enc.rst-001.in0  => jog.enc.rst-0001.in0
-net jog.enc.key-001.key    <= STM_IO.IN.33 => jog.enc.key-001.in  => jog.enc.rst-01.in0   => jog.enc.rst-0001.in1
-net kjog.enc.ey-0001.key   <= STM_IO.IN.35 => jog.enc.key-0001.in => jog.enc.rst-01.in1   => jog.enc.rst-001.in1
+net jog.enc.key-01.key     <= STM_IO.IN.01 => jog.enc.key-01.in   => jog.enc.rst-001.in0  => jog.enc.rst-0001.in0
+net jog.enc.key-001.key    <= STM_IO.IN.03 => jog.enc.key-001.in  => jog.enc.rst-01.in0   => jog.enc.rst-0001.in1
+net kjog.enc.ey-0001.key   <= STM_IO.IN.15 => jog.enc.key-0001.in => jog.enc.rst-01.in1   => jog.enc.rst-001.in1
 
 #connect the toggle reset input to the or2 reset outputs
 net jog.enc.rst-01         <=  jog.enc.key-01.rst   => jog.enc.rst-01.out 
@@ -199,9 +199,9 @@ net rjog.enc.st-0001       <=  jog.enc.key-0001.rst => jog.enc.rst-0001.out
 
 # step choices for the encoder wheel
 setp jog.enc.step-choice.in0 0
-setp jog.enc.step-choice.in1 0.001
+setp jog.enc.step-choice.in1 0.1
 setp jog.enc.step-choice.in2 0.01
-setp jog.enc.step-choice.in4 0.1
+setp jog.enc.step-choice.in4 0.001
 
 # encoder scale is set for all axis
 net jog.enc.step-choice <= jog.enc.step-choice.out
@@ -212,7 +212,7 @@ net jog.enc.step-choice => axis.z.jog-scale
 
 
 
-net jog.enc.jogCounts.raw <= hm2_5i25.0.encoder.02.count     => jog.enc.enc-smooth.in
+net jog.enc.jogCounts.raw <= hm2_5i25.0.encoder.01.count     => jog.enc.enc-smooth.in
 
 net jog.enc.jogCounts   <= jog.enc.enc-smooth.out
 net jog.enc.jogCounts   => axis.x.jog-counts
@@ -234,11 +234,11 @@ net jog.enc.ena-z <= jog.enc.sel-Z.out => axis.z.jog-enable => halui.joint.2.sel
 
 # connect leds and the step choice to the toggle outputs
 net jog.enc.led-01     <= jog.enc.key-01.out        => jog.enc.step-choice.sel0
-net jog.enc.led-01     => STM_IO.OUT.39
+net jog.enc.led-01     => STM_IO.OUT.40
 net jog.enc.led-001    <= jog.enc.key-001.out       => jog.enc.step-choice.sel1
-net jog.enc.led-001    => STM_IO.OUT.12
+net jog.enc.led-001    => STM_IO.OUT.44
 net jog.enc.led-0001   <= jog.enc.key-0001.out      => jog.enc.step-choice.sel2
-net jog.enc.led-0001   => STM_IO.OUT.38
+net jog.enc.led-0001   => STM_IO.OUT.42
 
 
 
@@ -258,17 +258,17 @@ addf jog.select servo-thread
 
 
 # connect the buttons to the jog Lock component
-net jog.jockLock  <= STM_IO.IN.34 => jog.jockLock.in
+net jog.jockLock  <= STM_IO.IN.18 => jog.jockLock.in
 
-net jog.raw.key-x-pos       <= STM_IO.IN.38         => jog.jogCntrl.keys-0
-net jog.raw.key-x-neg       <= STM_IO.IN.10         => jog.jogCntrl.keys-1
-net jog.raw.key-y-pos       <= STM_IO.IN.14         => jog.jogCntrl.keys-2
-net jog.raw.key-y-neg       <= STM_IO.IN.16         => jog.jogCntrl.keys-3
-net jog.raw.key-z-pos       <= STM_IO.IN.43         => jog.jogCntrl.keys-4
-net jog.raw.key-z-neg       <= STM_IO.IN.12         => jog.jogCntrl.keys-5
-net jog.raw.key-a-pos       <= STM_IO.IN.42         => jog.jogCntrl.keys-6
-net jog.raw.key-a-neg       <= STM_IO.IN.39         => jog.jogCntrl.keys-7
-net jog.raw.jogLock         <= jog.jockLock.out     => jog.jogCntrl.joglocktoggle   => STM_IO.OUT.32
+net jog.raw.key-x-pos       <= STM_IO.IN.05         => jog.jogCntrl.keys-0
+net jog.raw.key-x-neg       <= STM_IO.IN.22         => jog.jogCntrl.keys-1
+net jog.raw.key-y-pos       <= STM_IO.IN.06         => jog.jogCntrl.keys-2
+net jog.raw.key-y-neg       <= STM_IO.IN.24         => jog.jogCntrl.keys-3
+net jog.raw.key-z-pos       <= STM_IO.IN.41         => jog.jogCntrl.keys-4
+net jog.raw.key-z-neg       <= STM_IO.IN.19         => jog.jogCntrl.keys-5
+net jog.raw.key-a-pos       <= STM_IO.IN.07         => jog.jogCntrl.keys-6
+net jog.raw.key-a-neg       <= STM_IO.IN.25         => jog.jogCntrl.keys-7
+net jog.raw.jogLock         <= jog.jockLock.out     => jog.jogCntrl.joglocktoggle   => STM_IO.OUT.30
 
 
 net jog.out.key-x-pos       <= jog.jogCntrl.out-0   
@@ -281,14 +281,14 @@ net jog.out.key-a-pos       <= jog.jogCntrl.out-6
 net jog.out.key-a-neg       <= jog.jogCntrl.out-7   
 
 
-net jog.out.key-x-pos       => STM_IO.OUT.26        => halui.axis.x.plus
-net jog.out.key-x-neg       => STM_IO.OUT.24        => halui.axis.x.minus
-net jog.out.key-y-pos       => STM_IO.OUT.02        => halui.axis.y.plus
-net jog.out.key-y-neg       => STM_IO.OUT.42        => halui.axis.y.minus
-net jog.out.key-z-pos       => STM_IO.OUT.33        => halui.axis.z.plus
-net jog.out.key-z-neg       => STM_IO.OUT.07        => halui.axis.z.minus
-net jog.out.key-a-pos       => STM_IO.OUT.05
-net jog.out.key-a-neg       => STM_IO.OUT.09
+net jog.out.key-x-pos       => STM_IO.OUT.35        => halui.axis.x.plus
+net jog.out.key-x-neg       => STM_IO.OUT.33        => halui.axis.x.minus
+net jog.out.key-y-pos       => STM_IO.OUT.47        => halui.axis.y.plus
+net jog.out.key-y-neg       => STM_IO.OUT.29        => halui.axis.y.minus
+net jog.out.key-z-pos       => STM_IO.OUT.41        => halui.axis.z.plus
+net jog.out.key-z-neg       => STM_IO.OUT.39        => halui.axis.z.minus
+net jog.out.key-a-pos       => STM_IO.OUT.38
+net jog.out.key-a-neg       => STM_IO.OUT.28
 
 
 
@@ -314,16 +314,16 @@ net jog.enc.sel-Z-IN1       <= jog.select.out5      => jog.enc.sel-Z.in1
 
 ############# Axis Lock Control ###############
 
-net axisLock.X.IN            <= STM_IO.IN.24        =>  axisLock.X.in
-net axisLock.Y.IN            <= STM_IO.IN.40        =>  axisLock.Y.in
-net axisLock.Z.IN            <= STM_IO.IN.11        =>  axisLock.Z.in
+net axisLock.X.IN            <= STM_IO.IN.29        =>  axisLock.X.in
+net axisLock.Y.IN            <= STM_IO.IN.09        =>  axisLock.Y.in
+net axisLock.Z.IN            <= STM_IO.IN.21        =>  axisLock.Z.in
 
 # net axisLock.X.rst        
 # all axisLock resets are connected to halui.program.is-running
 
-net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.22   => hm2_5i25.0.7i77.0.0.output-04    =>  jog.jogCntrl.lock-0
-net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.25   => hm2_5i25.0.7i77.0.0.output-05    =>  jog.jogCntrl.lock-1
-net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.35   => hm2_5i25.0.7i77.0.0.output-06    =>  jog.jogCntrl.lock-2
+net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.10   => hm2_5i25.0.7i77.0.0.output-04    =>  jog.jogCntrl.lock-0
+net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.18   => hm2_5i25.0.7i77.0.0.output-05    =>  jog.jogCntrl.lock-1
+net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.09   => hm2_5i25.0.7i77.0.0.output-06    =>  jog.jogCntrl.lock-2
 
 setp jog.jogCntrl.lock-3 0 # fourth axis has no lock
 
@@ -366,39 +366,42 @@ net  STM_IO.stop      => halui.program.stop
 
 #led start is on during running and paused
 net STM_IO.led-start       <= STM_IO.led-start.out
-net STM_IO.led-start       => STM_IO.OUT.17
+net STM_IO.led-start       => STM_IO.OUT.14
 
 #led stop is on during idle and paused
 net STM_IO.led-stop       <= STM_IO.led-stop.out
-net STM_IO.led-stop       => STM_IO.OUT.16
+net STM_IO.led-stop       => STM_IO.OUT.13
 
 
 
 
-net spindle-manual-cw       <= STM_IO.IN.23 
+net spindle-manual-cw       <= STM_IO.IN.28 
 net STM_IO.led-spindle-cw   <= halui.spindle.0.runs-forward     => STM_IO.toolchg.or.in0
-net STM_IO.led-spindle-cw   => STM_IO.OUT.06
+net STM_IO.led-spindle-cw   => STM_IO.OUT.25
 
-net spindle-manual-ccw      <= STM_IO.IN.15
+net spindle-manual-ccw      <= STM_IO.IN.26
 net STM_IO.led-spindle-ccw   <= halui.spindle.0.runs-backward   => STM_IO.toolchg.or.in1
-net STM_IO.led-spindle-ccw   => STM_IO.OUT.18
+net STM_IO.led-spindle-ccw   => STM_IO.OUT.43
 
-net spindle-manual-stop     <= STM_IO.IN.46
-net spindle-manual-stop     => STM_IO.OUT.01
+net spindle-manual-stop     <= STM_IO.IN.08
+net spindle-manual-stop     => STM_IO.OUT.26
 
 
 
-net STM_IO.clearMsg         <= STM_IO.IN.44
+net STM_IO.clearMsg         <= STM_IO.IN.27
 #net STM_IO.clearMsg         => axisui.notifications-clear
-net STM_IO.clearMsg         => STM_IO.OUT.04
+net STM_IO.clearMsg         => STM_IO.OUT.23
+
+net STM_IO.clearDriveFault  <= STM_IO.IN.31
+net STM_IO.clearDriveFault  => STM_IO.OUT.34 => hm2_5i25.0.7i77.0.0.output-09
 
 
 
 net STM_IO.toolchg.or.OUT       <= STM_IO.toolchg.or.out    => STM_IO.toolchg.not.in
 net STM_IO.toolchg.not.OUT      <=  STM_IO.toolchg.not.out  => STM_IO.toolchg.and.in0
-net STM_IO.toolchg.and.IN1      <= STM_IO.IN.26             => STM_IO.toolchg.and.in1
+net STM_IO.toolchg.and.IN1      <= STM_IO.IN.04             => STM_IO.toolchg.and.in1
 net STM_IO.toolchg.and.OUT      <=  STM_IO.toolchg.and.out  => STM_IO.toolchg.in
-net STM_IO.toolchg              <= STM_IO.toolchg.out       =>  STM_IO.OUT.15           => hm2_5i25.0.7i77.0.0.output-08
+net STM_IO.toolchg              <= STM_IO.toolchg.out       =>  STM_IO.OUT.45           => hm2_5i25.0.7i77.0.0.output-08
 
 
 
