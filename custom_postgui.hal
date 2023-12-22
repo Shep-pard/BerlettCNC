@@ -1,2 +1,12 @@
 # Include your custom_postgui HAL commands here
 # This file will not be overwritten when you run PNCconf again
+
+
+net ztouch halui.mdi-command-00 <= pyvcp.ztouch
+
+net wls halui.mdi-command-01 <= pyvcp.addToolToTable
+net probeAnalog halui.mdi-command-02 <= pyvcp.probeAnalog
+net probeDigital halui.mdi-command-03 <= pyvcp.probeDigital
+net changetotool halui.mdi-command-04 <= pyvcp.changetotool
+
+

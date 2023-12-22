@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<pyvcp>
+  <vbox>
+    <relief>RAISED</relief>
+    <bd>3</bd>
+    <label text="Touch Off" />
+    <button>
+      <relief>RAISED</relief>
+      <bd>3</bd>
+      <halpin>"ztouch"</halpin>
+      <text>"Z"</text>
+      <font>("Helvetica",16)</font>
+    </button>
+  </vbox>
+  <vbox>
+    <relief>RAISED</relief>
+    <bd>3</bd>
+    <label text="Tool Changer" />
+    <button>
+      <relief>RAISED</relief>
+      <bd>2</bd>
+      <halpin>"probeAnalog"</halpin>
+      <text>"insert analog probe"</text>
+      <font>("Helvetica",12)</font>
+    </button>
+    <button>
+      <relief>RAISED</relief>
+      <bd>2</bd>
+      <halpin>"probeDigital"</halpin>
+      <text>"insert digital probe"</text>
+      <font>("Helvetica",12)</font>
+    </button>
+
+    <vbox>
+      <relief>RAISED</relief>
+      <bd>2</bd>
+      <label text="Measure New Tool" />
+
+      <vbox>
+        <relief>RAISED</relief>
+        <bd>2</bd>
+        <label text="Tool Nr: " />
+
+      <spinbox>
+        <halpin>"toolnr"</halpin>
+        <width>2</width>
+        <min_>1</min_>
+        <max_>100</max_>
+        <initval>1</initval>
+        <increment>1</increment>
+        <resolution>0.01</resolution>
+        <format>"2.0f"</format>
+        <font>("Arial",20)</font>
+      </spinbox>
+      </vbox>
+      <button>
+        <relief>RAISED</relief>
+        <bd>3</bd>
+        <halpin>"changetotool"</halpin>
+        <text>"Change to tool Nr:"</text>
+        <font>("Helvetica",12)</font>
+      </button>   
+      <vbox>
+        <relief>RAISED</relief>
+        <bd>2</bd>
+        <label text="Tool Dia: " />
+
+      <spinbox>
+        <halpin>"tooldia"</halpin>
+        <width>2</width>
+        <min_>0</min_>
+        <max_>100</max_>
+        <initval>1</initval>
+        <increment>0.5</increment>
+        <resolution>0.01</resolution>
+        <format>"2.2f"</format>
+        <font>("Arial",20)</font>
+      </spinbox>
+      </vbox>  
+      <button>
+        <relief>RAISED</relief>
+        <bd>3</bd>
+        <halpin>"addToolToTable"</halpin>
+        <text>"Update current tool:"</text>
+        <font>("Helvetica",12)</font>
+      </button>    
+
+    </vbox>
+  </vbox>
+</pyvcp>

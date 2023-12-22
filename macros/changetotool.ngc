@@ -1,0 +1,5 @@
+o<changetotool> sub 
+
+M6 T ROUND[#<_hal[pyvcp.toolnr]>]
+
+o<changetotool> endsub

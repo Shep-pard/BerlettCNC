@@ -69,18 +69,24 @@ net step-choice => axis.z.jog-scale
 
 net key-x <= hm2_7i92.0.TsHW.0.0.key-01
 net key-x => hm2_7i92.0.TsHW.0.0.led-01
-net key-x => shw.ena-x.in0
-net ena-x shw.ena-x.out => axis.x.jog-enable
+#net key-x => shw.ena-x.in0
+#net ena-x shw.ena-x.out => axis.x.jog-enable
+net ena-x STM_IO.IN.10 => axis.x.jog-enable
+
+#net sel-x <= STM_IO.IN.10
+#net sel-x => shw.ena-x.in1
 
 net key-y <= hm2_7i92.0.TsHW.0.0.key-06
 net key-y => hm2_7i92.0.TsHW.0.0.led-06
 net key-y => shw.ena-y.in0
 net ena-y shw.ena-y.out => axis.y.jog-enable
+#net sel-y <= STM_IO.IN.23
 
 net key-z <= hm2_7i92.0.TsHW.0.0.key-07
 net key-z => hm2_7i92.0.TsHW.0.0.led-07
 net key-z => shw.ena-z.in0
 net ena-z shw.ena-z.out => axis.z.jog-enable
+#net sel-z <= STM_IO.IN.16
 
 net key-ena <= hm2_7i92.0.TsHW.0.0.key-00
 net key-ena => shw.ena-x.in1

@@ -1,4 +1,13 @@
-T0 P0 ;
-T1 P1 ;
-T2 P2 ;
-T3 P3 ;
+T100 P100 D3.000000 Z+182.891000 ;3d probe analog 
+T101 P101 D2.000000 Z+126.845000 ;3d probe digital 
+T1 P1 Z+92.690000 ;tool1 
+T2 P2 D12.000000 Z+92.442000 ;tool2 
+T3 P3 ;tool3 
+T4 P4 ;tool4 
+T5 P5 ;tool5 
+T6 P6 ;tool6 
+T7 P7 ;tool7 
+T8 P8 ;tool8 
+T9 P9 ;tool9 
+T10 P10 ;tool10 
+T11 P11 ;tool11 

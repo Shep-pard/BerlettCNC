@@ -1,0 +1,12 @@
+O <z_touch> sub
+  G10 L20 P0 Z0		(set current Z = 0)
+  G91			(switch to relative coordinates)
+  G38.2 Z-30 F100	(probe down using a fast feedrate)
+  G92 Z0.01		(set Z = plate thickness)
+  G1 Z1 F25		(move up by 0.1mm)
+  G38.2 Z-3 F30		(2nd pass: probe down using a slow feedrate to get better accuracy)
+  G92 Z0.01		(set Z = plate thickness)
+  G90			(switch to absolute coordinates)
+  G1 Z20 F500		(move to 10mm above work piece)
+  O <z_touch> endsub
+ 
