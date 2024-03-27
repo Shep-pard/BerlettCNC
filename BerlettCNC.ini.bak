@@ -9,6 +9,16 @@ DEBUG = 0
 VERSION = 1.1
 
 [DISPLAY]
+# required NativeCAM item :
+NCAM_DIR = ncam
+
+# required NativeCAM item :
+EMBED_TAB_NAME = NativeCAM
+EMBED_TAB_COMMAND = gladevcp -x {XID} -U --catalog=mill /usr/share/linuxcnc/aux_gladevcp/NativeCAM/ncam.ui
+
+EMBED_TAB_NAME=Probe Screen 
+EMBED_TAB_COMMAND=halcmd loadusr -Wn gladevcp gladevcp -c gladevcp -x {XID} -u python/probe_screen.py -H probe_icons/probe_screen.hal probe_icons/probe_screen.glade 
+
 DISPLAY = axis
 POSITION_OFFSET = RELATIVE
 POSITION_FEEDBACK = ACTUAL
@@ -17,7 +27,9 @@ MAX_SPINDLE_OVERRIDE = 1.500000
 MIN_SPINDLE_OVERRIDE = 0.100000
 INTRO_GRAPHIC = linuxcnc.gif
 INTRO_TIME = 5
-PROGRAM_PREFIX = /home/berlett/cnc-exchange
+# required NativeCAM item :
+PROGRAM_PREFIX = ncam/scripts/
+
 INCREMENTS = 5mm 1mm .5mm .1mm .05mm .01mm .005mm
 POSITION_FEEDBACK = ACTUAL
 DEFAULT_LINEAR_VELOCITY = 6.000000
@@ -44,7 +56,9 @@ CYCLE_TIME = 0.010
 
 [RS274NGC]
 PARAMETER_FILE = linuxcnc.var
-SUBROUTINE_PATH = macros
+# required NativeCAM item :
+SUBROUTINE_PATH = ncam/my-stuff:ncam/lib/mill:ncam/lib/utilities:macros
+#FEATURES=30
 REMAP=M6  modalgroup=6 ngc=messen
 
 [EMCMOT]
@@ -52,9 +66,36 @@ EMCMOT = motmod
 COMM_TIMEOUT = 1.0
 SERVO_PERIOD = 1000000
 
+[PYTHON]
+PATH_PREPEND = ./python
+TOPLEVEL = python/toplevel.py
+
 [HMOT]
 # **** This is for info only ****
-CARD0=hm2_5i25.0
+#CARD0=hm2_5i25.0
+CARD0=hm2_7i76e.0
+
+
+[TOOLSENSOR]
+# Absolute coordinates of the toolsetter pad 
+X = 10
+Y = 10
+# Absolute Z start search coordinates
+Z = 60
+# Maximum search distance and direction (sign)
+MAXPROBE = -20
+# Speed of movements during working in Probe Screen
+RAPID_SPEED = 400
+# Diameter of toolsetter pad 
+TS_DIAMETER = 10
+# The speed of the reverse rotation of the spindle when measuring the tool diameter
+REV_ROTATION_SPEED = 300
+
+[CHANGE_POSITION]
+# Abs coordinates tool change point
+X = 296.5
+Y = 91
+Z = -10
 
 [HAL]
 HALUI = halui
@@ -65,10 +106,6 @@ POSTGUI_HALFILE = postgui_call_list.hal
 SHUTDOWN = shutdown.hal
 
 [HALUI]
-MDI_COMMAND = O <xN_touch> CALL
-MDI_COMMAND = O <xP_touch> CALL
-MDI_COMMAND = O <yN_touch> CALL
-MDI_COMMAND = O <yP_touch> CALL
 MDI_COMMAND = O <z_touch> CALL
 MDI_COMMAND = O <wls> CALL
 # change to analog probe
@@ -107,15 +144,14 @@ TYPE = LINEAR
 HOME = 0.0
 FERROR = 100.0
 MIN_FERROR = 100.0
-MAX_VELOCITY = 60.0
-MAX_ACCELERATION = 400.0
+
 
 P = 20 
 I = 0
 D = 0
 FF0 = 0
-FF1 = 0
-FF2 = 0.004
+FF1 = 1
+FF2 = 0.003
 BIAS = 0
 DEADBAND = 0.005
 MAX_OUTPUT = 0
@@ -134,8 +170,8 @@ DIRHOLD    = 1000
 STEPLEN    = 1000
 STEPSPACE  = 1000
 STEP_SCALE = 2184
-MAX_VELOCITY = 80
-MAX_ACCELERATION = 750.0
+MAX_VELOCITY = 60.0
+MAX_ACCELERATION = 400.0
 # The values below should be 25% larger than MAX_VELOCITY and MAX_ACCELERATION
 # If using BACKLASH compensation STEPGEN_MAXACCEL should be 100% larger.
 STEPGEN_MAXVEL = 57.47126
@@ -161,14 +197,13 @@ TYPE = LINEAR
 HOME = 0.0
 FERROR = 100.0
 MIN_FERROR = 100.0
-MAX_VELOCITY = 60.0
-MAX_ACCELERATION = 100.0
-P = 10
+
+P = 50
 I = 0
 D = 0
 FF0 = 0
-FF1 = 0
-FF2 = 0.001
+FF1 = 1
+FF2 = 0
 BIAS = 0
 DEADBAND = 0.005
 MAX_OUTPUT = 0
@@ -187,8 +222,8 @@ DIRHOLD    = 1000
 STEPLEN    = 1000
 STEPSPACE  = 1000
 STEP_SCALE = 2184
-MAX_VELOCITY = 80
-MAX_ACCELERATION = 750.0
+MAX_VELOCITY = 60.0
+MAX_ACCELERATION = 100.0
 # The values below should be 25% larger than MAX_VELOCITY and MAX_ACCELERATION
 # If using BACKLASH compensation STEPGEN_MAXACCEL should be 100% larger.
 STEPGEN_MAXVEL = 100
@@ -202,7 +237,7 @@ OUTPUT_MAX_LIMIT = 10
 
 #******************************************
 [AXIS_Z]
-MAX_VELOCITY = 17.0
+MAX_VELOCITY = 15.0
 MAX_ACCELERATION = 100.0
 MIN_LIMIT = -380
 MAX_LIMIT = 3
@@ -212,14 +247,14 @@ TYPE = LINEAR
 HOME = 0.0
 FERROR = 100.0
 MIN_FERROR = 100.0
-MAX_VELOCITY = 17.0
-MAX_ACCELERATION = 50.0
+#MAX_VELOCITY = 15.0
+#MAX_ACCELERATION = 50.0
 
 P = 10
 I = 0
 D = 0
 FF0 = 0
-FF1 = 0
+FF1 = 1
 FF2 = 0.0001
 BIAS = 0
 DEADBAND = 0.005

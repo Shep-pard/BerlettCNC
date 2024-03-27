@@ -48,7 +48,7 @@ G59.3 Z#1800	   	         (Sichere Z Position  )
 G59.3 X#1801 Y#1802  	     (Taster Position     )
 G91
 G59.3 G38.2 Z-300  F#1805     (messen grob         )
-G1    Z2.0  F#1805           (frei fahren         )	
+G1    Z1.5  F#1805           (frei fahren         )	
 G38.2 Z-10  F#1804           (messen fein         )
 #2000=[#1803-#5063]	     (Referenzwert - Tastpunkt)
 #2000=[#2000 *-1]        (Vorzeichen tauschen     )

@@ -6,11 +6,16 @@
 loadrt [KINS]KINEMATICS
 loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
 loadrt hostmot2
-loadrt hm2_pci config=" num_encoders=6 num_pwmgens=0 num_stepgens=3 sserial_port_0=200000" 
+#loadrt hm2_pci config=" num_encoders=6 num_pwmgens=0 num_stepgens=3 sserial_port_0=200000" 
+loadrt hm2_pci config=" num_encoders=0 num_pwmgens=0 num_stepgens=3 sserial_port_0=200000" 
+loadrt hm2_eth board_ip="192.168.1.121" config="num_encoders=7 num_pwmgens=0 num_stepgens=5 sserial_port_0=00200000" 
+
+
+setp    hm2_7i76e.0.watchdog.timeout_ns 5000000
 setp    hm2_5i25.0.watchdog.timeout_ns 5000000
 loadrt pid names=pid.x,pid.y,pid.z,pid.s
 
-
+addf hm2_7i76e.0.read          servo-thread
 addf hm2_5i25.0.read          servo-thread
 addf motion-command-handler   servo-thread
 addf motion-controller        servo-thread
@@ -19,57 +24,60 @@ addf pid.y.do-pid-calcs       servo-thread
 addf pid.z.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
 addf hm2_5i25.0.write         servo-thread
+addf hm2_7i76e.0.write         servo-thread
+setp hm2_7i76e.0.dpll.01.timer-us -50
+setp hm2_7i76e.0.stepgen.timer-number 1
 
 # external output signals
 
 
 # --- SPINDLE-CW ---
-net spindle-cw  =>     hm2_5i25.0.7i77.0.0.output-00
+net spindle-cw  =>     hm2_7i76e.0.7i77.0.2.output-00
 
 # --- SPINDLE-CCW ---
-net spindle-ccw  =>     hm2_5i25.0.7i77.0.0.output-01
+net spindle-ccw  =>     hm2_7i76e.0.7i77.0.2.output-01
 
 # --- Z-ENABLE ---
-net z-enable  =>     hm2_5i25.0.7i77.0.0.output-02
+net z-enable  =>     hm2_7i76e.0.7i77.0.2.output-02
 
 # --- COOLANT-FLOOD ---
-net coolant-flood  =>     hm2_5i25.0.7i77.0.0.output-03
+net coolant-flood  =>     hm2_7i76e.0.7i77.0.2.output-03
 
 # external input signals
 
 
 # --- JOG-X-POS ---
-#net jog-x-pos     <=  hm2_5i25.0.7i77.0.0.input-09
+#net jog-x-pos     <=  hm2_7i76e.0.7i77.0.2.input-09
 
 # --- JOG-Z-NEG ---
-#net jog-z-neg     <=  hm2_5i25.0.7i77.0.0.input-10
+#net jog-z-neg     <=  hm2_7i76e.0.7i77.0.2.input-10
 
 # --- MAX-HOME-X ---
-net max-home-x     <=  hm2_5i25.0.7i77.0.0.input-17-not
+net max-home-x     <=  hm2_7i76e.0.7i77.0.2.input-17-not
 
 # --- MIN-X ---
-net min-x     <=  hm2_5i25.0.7i77.0.0.input-16-not
+net min-x     <=  hm2_7i76e.0.7i77.0.2.input-16-not
 
 # --- MAX-HOME-Y ---
-net max-home-y     <=  hm2_5i25.0.7i77.0.0.input-18-not
+net max-home-y     <=  hm2_7i76e.0.7i77.0.2.input-18-not
 
 # --- MIN-Y ---
-net min-y     <=  hm2_5i25.0.7i77.0.0.input-19-not
+net min-y     <=  hm2_7i76e.0.7i77.0.2.input-19-not
 
 # --- MAX-HOME-Z ---
-net max-home-z     <=  hm2_5i25.0.7i77.0.0.input-20-not
+net max-home-z     <=  hm2_7i76e.0.7i77.0.2.input-20-not
 
 # --- MIN-Z ---
-net min-z     <=  hm2_5i25.0.7i77.0.0.input-21-not
+net min-z     <=  hm2_7i76e.0.7i77.0.2.input-21-not
 
 # --- CYCLE-START ---
-#net cycle-start     <=  hm2_5i25.0.7i77.0.0.input-22
+#net cycle-start     <=  hm2_7i76e.0.7i77.0.2.input-22
 
 ## --- ABORT ---
-#net abort     <=  hm2_5i25.0.7i77.0.0.input-23
+#net abort     <=  hm2_7i76e.0.7i77.0.2.input-23
 
 # --- ESTOP-EXT ---
-net estop-ext     <=  hm2_5i25.0.7i77.0.0.input-24
+net estop-ext     <=  hm2_7i76e.0.7i77.0.2.input-24
 
 
 #*******************
@@ -95,15 +103,15 @@ net x-output        <=  pid.x.output
 
 # ---PWM Generator signals/setup---
 
-setp   hm2_5i25.0.7i77.0.1.analogout0-scalemax  [JOINT_0]OUTPUT_SCALE
-setp   hm2_5i25.0.7i77.0.1.analogout0-minlim    [JOINT_0]OUTPUT_MIN_LIMIT
-setp   hm2_5i25.0.7i77.0.1.analogout0-maxlim    [JOINT_0]OUTPUT_MAX_LIMIT
+setp   hm2_7i76e.0.7i77.0.3.analogout0-scalemax  [JOINT_0]OUTPUT_SCALE
+setp   hm2_7i76e.0.7i77.0.3.analogout0-minlim    [JOINT_0]OUTPUT_MIN_LIMIT
+setp   hm2_7i76e.0.7i77.0.3.analogout0-maxlim    [JOINT_0]OUTPUT_MAX_LIMIT
 
-#net x-output     => hm2_5i25.0.7i77.0.1.analogout0
+#net x-output     => hm2_7i76e.0.7i77.0.3.analogout0
 #net x-pos-cmd    <= joint.0.motor-pos-cmd
 #net x-enable     <= joint.0.amp-enable-out
 # enable _all_ sserial pwmgens
-#net x-enable   => hm2_5i25.0.7i77.0.1.analogena
+#net x-enable   => hm2_7i76e.0.7i77.0.3.analogena
 
 net x-error => joint.0.amp-fault-in 
 
@@ -137,18 +145,18 @@ net x-enable     => hm2_5i25.0.stepgen.00.enable
 
 # ---Encoder feedback signals/setup---
 
-setp    hm2_5i25.0.encoder.00.counter-mode 0
-setp    hm2_5i25.0.encoder.00.filter 1
-setp    hm2_5i25.0.encoder.00.index-invert 0
-setp    hm2_5i25.0.encoder.00.index-mask 0
-setp    hm2_5i25.0.encoder.00.index-mask-invert 0
-setp    hm2_5i25.0.encoder.00.scale  [JOINT_0]ENCODER_SCALE
+setp    hm2_7i76e.0.encoder.00.counter-mode 0
+setp    hm2_7i76e.0.encoder.00.filter 1
+setp    hm2_7i76e.0.encoder.00.index-invert 0
+setp    hm2_7i76e.0.encoder.00.index-mask 0
+setp    hm2_7i76e.0.encoder.00.index-mask-invert 0
+setp    hm2_7i76e.0.encoder.00.scale  [JOINT_0]ENCODER_SCALE
 
-net x-pos-fb               <=  hm2_5i25.0.encoder.00.position
-net x-vel-fb               <=  hm2_5i25.0.encoder.00.velocity
+net x-pos-fb               <=  hm2_7i76e.0.encoder.00.position
+net x-vel-fb               <=  hm2_7i76e.0.encoder.00.velocity
 net x-pos-fb               =>  joint.0.motor-pos-fb
-net x-index-enable    joint.0.index-enable  <=>  hm2_5i25.0.encoder.00.index-enable
-net x-pos-rawcounts        <=  hm2_5i25.0.encoder.00.rawcounts
+net x-index-enable    joint.0.index-enable  <=>  hm2_7i76e.0.encoder.00.index-enable
+net x-pos-rawcounts        <=  hm2_7i76e.0.encoder.00.rawcounts
 
 # ---setup home / limit switch signals---
 
@@ -179,11 +187,11 @@ net y-output        <=  pid.y.output
 
 # ---PWM Generator signals/setup---
 
-setp   hm2_5i25.0.7i77.0.1.analogout1-scalemax  [JOINT_1]OUTPUT_SCALE
-setp   hm2_5i25.0.7i77.0.1.analogout1-minlim    [JOINT_1]OUTPUT_MIN_LIMIT
-setp   hm2_5i25.0.7i77.0.1.analogout1-maxlim    [JOINT_1]OUTPUT_MAX_LIMIT
+setp   hm2_7i76e.0.7i77.0.3.analogout1-scalemax  [JOINT_1]OUTPUT_SCALE
+setp   hm2_7i76e.0.7i77.0.3.analogout1-minlim    [JOINT_1]OUTPUT_MIN_LIMIT
+setp   hm2_7i76e.0.7i77.0.3.analogout1-maxlim    [JOINT_1]OUTPUT_MAX_LIMIT
 
-#net y-output     => hm2_5i25.0.7i77.0.1.analogout1
+#net y-output     => hm2_7i76e.0.7i77.0.3.analogout1
 #net y-pos-cmd    <= joint.1.motor-pos-cmd
 #net y-enable     <= joint.1.amp-enable-out
 
@@ -214,18 +222,18 @@ net y-enable     => hm2_5i25.0.stepgen.01.enable
 
 # ---Encoder feedback signals/setup---
 
-setp    hm2_5i25.0.encoder.04.counter-mode 0
-setp    hm2_5i25.0.encoder.04.filter 1
-setp    hm2_5i25.0.encoder.04.index-invert 0
-setp    hm2_5i25.0.encoder.04.index-mask 0
-setp    hm2_5i25.0.encoder.04.index-mask-invert 0
-setp    hm2_5i25.0.encoder.04.scale  [JOINT_1]ENCODER_SCALE
+setp    hm2_7i76e.0.encoder.04.counter-mode 0
+setp    hm2_7i76e.0.encoder.04.filter 1
+setp    hm2_7i76e.0.encoder.04.index-invert 0
+setp    hm2_7i76e.0.encoder.04.index-mask 0
+setp    hm2_7i76e.0.encoder.04.index-mask-invert 0
+setp    hm2_7i76e.0.encoder.04.scale  [JOINT_1]ENCODER_SCALE
 
-net y-pos-fb               <=  hm2_5i25.0.encoder.04.position
-net y-vel-fb               <=  hm2_5i25.0.encoder.04.velocity
+net y-pos-fb               <=  hm2_7i76e.0.encoder.04.position
+net y-vel-fb               <=  hm2_7i76e.0.encoder.04.velocity
 net y-pos-fb               =>  joint.1.motor-pos-fb
-net y-index-enable    joint.1.index-enable  <=>  hm2_5i25.0.encoder.04.index-enable
-net y-pos-rawcounts        <=  hm2_5i25.0.encoder.04.rawcounts
+net y-index-enable    joint.1.index-enable  <=>  hm2_7i76e.0.encoder.04.index-enable
+net y-pos-rawcounts        <=  hm2_7i76e.0.encoder.04.rawcounts
 
 # ---setup home / limit switch signals---
 
@@ -256,11 +264,11 @@ net z-output        <=  pid.z.output
 
 # ---PWM Generator signals/setup---
 
-setp   hm2_5i25.0.7i77.0.1.analogout2-scalemax  [JOINT_2]OUTPUT_SCALE
-setp   hm2_5i25.0.7i77.0.1.analogout2-minlim    [JOINT_2]OUTPUT_MIN_LIMIT
-setp   hm2_5i25.0.7i77.0.1.analogout2-maxlim    [JOINT_2]OUTPUT_MAX_LIMIT
+setp   hm2_7i76e.0.7i77.0.3.analogout2-scalemax  [JOINT_2]OUTPUT_SCALE
+setp   hm2_7i76e.0.7i77.0.3.analogout2-minlim    [JOINT_2]OUTPUT_MIN_LIMIT
+setp   hm2_7i76e.0.7i77.0.3.analogout2-maxlim    [JOINT_2]OUTPUT_MAX_LIMIT
 
-#net z-output     => hm2_5i25.0.7i77.0.1.analogout2
+#net z-output     => hm2_7i76e.0.7i77.0.3.analogout2
 #net z-pos-cmd    <= joint.2.motor-pos-cmd
 #net z-enable     <= joint.2.amp-enable-out
 
@@ -289,18 +297,18 @@ net z-enable     => hm2_5i25.0.stepgen.02.enable
 
 # ---Encoder feedback signals/setup---
 
-setp    hm2_5i25.0.encoder.03.counter-mode 0
-setp    hm2_5i25.0.encoder.03.filter 1
-setp    hm2_5i25.0.encoder.03.index-invert 0
-setp    hm2_5i25.0.encoder.03.index-mask 0
-setp    hm2_5i25.0.encoder.03.index-mask-invert 0
-setp    hm2_5i25.0.encoder.03.scale  [JOINT_2]ENCODER_SCALE
+setp    hm2_7i76e.0.encoder.03.counter-mode 0
+setp    hm2_7i76e.0.encoder.03.filter 1
+setp    hm2_7i76e.0.encoder.03.index-invert 0
+setp    hm2_7i76e.0.encoder.03.index-mask 0
+setp    hm2_7i76e.0.encoder.03.index-mask-invert 0
+setp    hm2_7i76e.0.encoder.03.scale  [JOINT_2]ENCODER_SCALE
 
-net z-pos-fb               <=  hm2_5i25.0.encoder.03.position
-net z-vel-fb               <=  hm2_5i25.0.encoder.03.velocity
+net z-pos-fb               <=  hm2_7i76e.0.encoder.03.position
+net z-vel-fb               <=  hm2_7i76e.0.encoder.03.velocity
 net z-pos-fb               =>  joint.2.motor-pos-fb
-net z-index-enable    joint.2.index-enable  <=>  hm2_5i25.0.encoder.03.index-enable
-net z-pos-rawcounts        <=  hm2_5i25.0.encoder.03.rawcounts
+net z-index-enable    joint.2.index-enable  <=>  hm2_7i76e.0.encoder.03.index-enable
+net z-pos-rawcounts        <=  hm2_7i76e.0.encoder.03.rawcounts
 
 # ---setup home / limit switch signals---
 
@@ -347,8 +355,8 @@ net spindle-index-enable      <=>  spindle.0.index-enable
 # ---Setup spindle at speed signals---
 
 sets spindle-at-speed true
-net spindle-output     => hm2_5i25.0.7i77.0.1.analogout4
-net spindle-enable => hm2_5i25.0.7i77.0.1.analogena
+net spindle-output     => hm2_7i76e.0.7i77.0.3.analogout4
+net spindle-enable => hm2_7i76e.0.7i77.0.3.analogena
 
 
 #******************************
@@ -391,7 +399,7 @@ net coolant-flood     <=  iocontrol.0.coolant-flood
 
 # ---jogwheel signals to mesa encoder - shared MPG---
 
-#net axis-selected-count     <=  hm2_5i25.0.encoder.01.count
+#net axis-selected-count     <=  hm2_7i76e.0.encoder.01.count
 
 #  ---motion control signals---
 

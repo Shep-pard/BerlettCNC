@@ -2102,7 +2102,7 @@ class ProbeScreenClass:
         self.ym = self.builder.get_object("ym")
         self.xmym = self.builder.get_object("xmym")
         self.xp = self.builder.get_object("xp")
-        self.center = self.builder.get_object("center")
+        #self.center = self.builder.get_object("center")
         self.xm = self.builder.get_object("xm")
         self.xpyp = self.builder.get_object("xpyp")
         self.yp = self.builder.get_object("yp")
