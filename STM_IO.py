@@ -40,13 +40,15 @@ try:
             # you're sending from the arduino. It does not have to be the same length
             # as the outbound messages.
             key = ser.read(7)
+            #for i in range(7):
+            #    print(key[i])
             # The Arduino generates two different key events
             # One when the key is pressed down (+S) and another when it is released (-S)
             # In this case we are going to ignore the release
 
         if len(key) == 7:
             for i in range(6):
-                inData = inData | (ord(key[6-i]) << (8*i))
+                inData = inData | ((key[6-i]) << (8*i))
         # print len(key)
 
         for ports in range(48):
@@ -63,12 +65,13 @@ try:
         a.append(0x02)
         for i in range(6):
             a.append(((sendData >> (47 - (8*i))) & 0xFF))
+        print(a)
         a = ser.write(a)
         del a
 
         time.sleep(.03)
 
 except KeyboardInterrupt:
-    ser.write("-P;")
+    ser.write(str.encode("-P;"))
     ser.close()
     raise SystemExit

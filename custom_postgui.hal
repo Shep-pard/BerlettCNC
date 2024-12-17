@@ -2,11 +2,18 @@
 # This file will not be overwritten when you run PNCconf again
 
 
-net ztouch halui.mdi-command-00 <= pyvcp.ztouch
+net ztouch halui.mdi-command-27 <= pyvcp.ztouch
 
-net wls halui.mdi-command-01 <= pyvcp.addToolToTable
-net probeAnalog halui.mdi-command-02 <= pyvcp.probeAnalog
-net probeDigital halui.mdi-command-03 <= pyvcp.probeDigital
-net changetotool halui.mdi-command-04 <= pyvcp.changetotool
+net wls halui.mdi-command-28 <= pyvcp.addToolToTable
+net probeAnalog halui.mdi-command-29 <= pyvcp.probeAnalog
+net probeDigital halui.mdi-command-30 <= pyvcp.probeDigital
+net changetotool halui.mdi-command-31 <= pyvcp.changetotool
+
+#
+net spindle-gear-sel <= pyvcp.gear-sel.low => dfe24gateway.gear-sel
+net spindle-rpm <=  dfe24gateway.spindle-speed-fb-rpm  =>  pyvcp.spindle-speed-bar
+net spindle-load <=  dfe24gateway.spindle-load =>  pyvcp.spindle-load-bar
+
+
 
 

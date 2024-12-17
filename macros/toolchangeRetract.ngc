@@ -1,0 +1,23 @@
+o<messen> sub
+#1702=-10		(Wechsel Z Position)
+
+
+o500 if [#<_current_tool> EQ #<_selected_tool>]
+;(debug, Tool bereits in der Spindel)
+o500 else
+
+M5
+G54
+G90 G0
+
+G90 G1 F800
+G53  Z#1702	   	 (Wechsel Z Position)
+M6 T#<_selected_tool>
+
+G43
+
+o500 endif
+
+
+o<messen> endsub
+M2

@@ -1,0 +1,52 @@
+component dfe24Gateway "Ethercat DFE24 Gateway component";
+pin in float spindle_speed_in;
+pin out float spindle_speed_fb;
+pin out float spindle_speed_fb_rpm;
+pin out float spindle_load;
+pin out bit spindle_at_speed;
+
+pin out signed dfe_speed_out;
+pin in signed dfe_speed_fb;
+pin in signed dfe_load;
+
+pin in bit gear_sel;
+
+
+param rw float motorRpmScale = 0.2 "scale from DFE24 to motor RPM";
+param rw float gearHighScale = 1 "scale from motor RPM to spindle RPM in high gear";
+param rw float gearLowScale = 1 "scale from motor RPM to spindle RPM in low gear";
+
+
+function _ nofp;
+license "GPL";
+;;
+#include <rtapi_math.h>
+
+FUNCTION(_) 
+{
+
+    // calc dfe output from input
+    float gearScale = gearHighScale;
+    if (gear_sel) 
+    {
+        gearScale = gearLowScale;
+    }
+
+    dfe_speed_out = (signed)( spindle_speed_in * gearScale / motorRpmScale);
+
+    spindle_load = (float)dfe_load / 10.0;
+    
+    spindle_speed_fb_rpm = fabs((float)dfe_speed_fb * motorRpmScale / gearScale);
+    spindle_speed_fb = (float)dfe_speed_fb * motorRpmScale / gearScale / 60;
+
+    if(fabs(dfe_speed_out - dfe_speed_fb) * motorRpmScale < 100 && dfe_speed_fb != 0)
+    {
+        spindle_at_speed = true;
+    }
+    else
+    {
+        spindle_at_speed = false;
+    }
+
+    
+}

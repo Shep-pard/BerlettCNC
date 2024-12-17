@@ -1,0 +1,32 @@
+# Halshow settings
+# This file is generated automatically.
+wm geometry . 1280x917+0+0
+placeFrames 0.3
+set ::ratio 0.3
+set ::old_w_leftf 160
+set ::watchlist {
+    pin+lcec.0.DO2.dout-0
+    pin+lcec.0.DO2.dout-1
+    pin+lcec.0.DO2.dout-2
+    pin+lcec.0.DO2.dout-3
+    pin+lcec.0.DO2.dout-4
+    pin+lcec.0.DO2.dout-6
+    pin+lcec.0.DO2.dout-7
+    pin+lcec.0.DO2.dout-8
+    pin+lcec.0.DO2.slave-online
+    pin+lcec.0.DO2.dout-9
+    pin+lcec.0.DO2.dout-10
+    pin+lcec.0.DO2.dout-11
+    pin+lcec.0.DO2.dout-13
+    pin+lcec.0.DO2.dout-14
+    pin+lcec.0.DO2.dout-15
+    pin+lcec.0.DO2.dout-5
+    pin+lcec.0.DO2.dout-12
+}
+set ::workmode watchhal
+set ::watchInterval 100
+set ::col1_width 100
+set ::ffmts 
+set ::ifmts 
+set ::alwaysOnTop 0
+set ::autoSaveWatchlist 1

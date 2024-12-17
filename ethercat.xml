@@ -1,0 +1,106 @@
+<masters>
+  <master idx="0" appTimePeriod="500000" refClockSyncCycles="500">
+    <slave idx="0" type="DeASDA3" name="A3_Z">
+      <modParam name="opmode" value="CSV"/>
+      <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
+    </slave>
+    <slave idx="1" type="DeASDA3" name="A3_Y">
+      <modParam name="opmode" value="CSV"/>
+      <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
+    </slave>
+    <slave idx="2" type="DeASDA3" name="A3_X">
+      <modParam name="opmode" value="CSV"/>
+      <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
+    </slave>
+    <slave idx="3" type="generic" name="0-Spindle" vid="0x00000059" pid="0x00000002" configPdos="true">
+      <initCmds filename="DFEGateway.xml"/>
+      <watchdog divider="25000" intervals="100"/>
+      <syncManager idx="0" dir="in"/>
+      <syncManager idx="1" dir="out"/>
+      <syncManager idx="2" dir="out">
+        <pdo idx="1601">
+          <!--RxPDO 2 mapping-->
+          <pdoEntry idx="3db8" subIdx="00" bitLen="16">
+            <complexEntry bitLen="1" halPin="srv-disable-volt" halType="bit"/>
+            <complexEntry bitLen="1" halPin="srv-enable" halType="bit"/>
+            <complexEntry bitLen="1" halPin="srv-switch-on" halType="bit"/>
+            <complexEntry bitLen="3"/>
+            <complexEntry bitLen="1" halPin="srv-fault-reset" halType="bit"/>
+          </pdoEntry>
+          <pdoEntry idx="3db9" subIdx="00" bitLen="16" halPin="srv-speed" halType="s32"/>
+          <pdoEntry idx="3dba" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dbb" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dbc" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dbd" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dbe" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dbf" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc0" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc1" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc2" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc3" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc4" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc5" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc6" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc7" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc8" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dc9" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dca" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dcb" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dcc" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dcd" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dce" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3dcf" subIdx="00" bitLen="16"/>
+        </pdo>
+      </syncManager>
+      <syncManager idx="3" dir="in">
+        <pdo idx="1a01">
+          <!--TxPDO 2 mapping-->
+          <pdoEntry idx="3e1c" subIdx="00" bitLen="16">
+            <complexEntry bitLen="1" halPin="srv-volt-enabled" halType="bit"/>
+            <complexEntry bitLen="1" halPin="srv-ready" halType="bit"/>
+            <complexEntry bitLen="1" halPin="data-tranfer-enabled" halType="bit"/>
+            <complexEntry bitLen="2"/>
+            <complexEntry bitLen="1" halPin="srv-fault" halType="bit"/>
+            <complexEntry bitLen="2"/>
+            <complexEntry bitLen="8" halPin="srv-status-word" halType="bit"/>
+          </pdoEntry>
+          <pdoEntry idx="3e1d" subIdx="00" bitLen="16" halPin="current-speed" halType="s32"/>
+          <pdoEntry idx="3e1e" subIdx="00" bitLen="16" halPin="current-load" halType="s32"/>
+          <pdoEntry idx="3e1f" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e20" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e21" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e22" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e23" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e24" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e25" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e26" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e27" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e28" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e29" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e2a" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e2b" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e2c" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e2d" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e2e" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e2f" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e30" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e31" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e32" subIdx="00" bitLen="16"/>
+          <pdoEntry idx="3e33" subIdx="00" bitLen="16"/>
+
+        </pdo>
+      </syncManager>
+    </slave>
+    <slave idx="4" type="EK1100" name="EK"/>
+    <slave idx="5" type="EL4004" name="AO1"/>
+    <slave idx="6" type="EL1809" name="DI1"/>
+    <slave idx="7" type="EL1809" name="DI2"/>
+    <slave idx="8" type="EL1809" name="DI3"/>
+    <slave idx="9" type="EL2809" name="DO1"/>
+    <slave idx="10" type="EL2809" name="DO2"/>
+
+    
+
+  </master>
+</masters>
+    
