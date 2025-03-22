@@ -1,0 +1,7 @@
+Proberesults of easyprobe:
+--------------------------
+X:             24.998000
+Y:             0.000000
+Z:             0.000000
+vector length: 24.998000
+

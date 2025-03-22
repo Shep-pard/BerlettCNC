@@ -1,0 +1,58 @@
+
+component toolchanger "toolchanger";
+pin in bit spindle-running;
+pin in bit toggle-toolchanger;
+pin in bit toolchanger-state;
+pin out bit spindle-inhibit;
+pin out bit toolchanger-out;
+
+param rw unsigned debounce = 5 "debounce delay in periods";
+
+option data toggle_data;
+
+
+
+
+
+function _ nofp;
+license "GPL";
+;;
+
+typedef struct {
+    int debounce_cntr;
+    int debounced;
+} toggle_data;
+
+FUNCTION(_) {
+
+    if( !spindle_running )
+    {
+        if ( toggle_toolchanger ) {
+        /* pressed */
+            data.debounce_cntr++;
+            if ( data.debounce_cntr >= debounce ) {
+                data.debounce_cntr = debounce;
+                if ( data.debounced == 0 ) {
+                /* toggle output */
+                toolchanger_out = !toolchanger_out;
+                if(toolchanger_out)
+                {
+                    spindle_inhibit = 1;
+                }
+                else
+                {
+                    spindle_inhibit = 0;
+                }
+                }
+                data.debounced = 1;
+            }
+        } else {
+            /* not pressed */
+            data.debounce_cntr--;
+            if ( data.debounce_cntr <= 0 ) {
+                data.debounce_cntr = 0;
+                data.debounced = 0;
+            }
+        }
+    }
+}

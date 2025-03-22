@@ -3,7 +3,7 @@ T101  P101  Z126.723  D12  ;3d probe digital
 T1  P1  Z91.287  D10  ;tool1
 T2  P2  Z195.433  D6.5  ;tool2
 T3  P3  Z95.939  D10  ;fasenfraeser
-T4  P4  Z178.9045  D4  ;tool4
+T4  P4  Z0  D4  ;tool4
 T5  P5  ;tool5
 T6  P6  ;tool6
 T7  P7  ;tool7
@@ -11,4 +11,4 @@ T8  P8  ;tool8
 T9  P9  ;tool9
 T10  P10  ;tool10
 T11  P11  ;tool11
-T99  P99  D2  ;Added 20241109
+T99  P99  X-0.002917  Y-0.01525  D2  I1.886000  J1.980000  ;Added 20241109

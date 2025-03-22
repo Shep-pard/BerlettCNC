@@ -1,112 +1,13 @@
 
-#First load the Python user module
-loadusr -Wn STM_IO /home/berlett/linuxcnc/configs/BerlettCNC/STM_IO
-
-#Second 'unlinkp' our pins to make them available for use.
-# Then use 'net' to recreate/hook into them.
-
-#net 
-
-
-#net my-jogspeed halui.axis.jog-speed <= arduino.speed
-#net my-jogxminus halui.axis.x.minus <= arduino.x-minus
-##net my-jogxplus halui.axis.x.plus <= arduino.x-plus
-#net my-jogyminus halui.axis.y.minus <= arduino.y-minus
-#net my-jogyplus halui.axis.y.plus <= arduino.y-plus
-
-# Spindle power
-#unlinkp spindle.0.on
-#net spindle-On arduino.spindleEnable <= spindle.0.on
-
-# Stop
-#unlinkp iocontrol.0.user-enable-out
-#net estop-out arduino.stop
-
-#unlinkp joint.0.motor-pos-cmd
-#net xpos-cmd joint.0.motor-pos-cmd => arduino.axis0-cmd
-
-#unlinkp joint.1.motor-pos-cmd
-#net ypos-cmd joint.1.motor-pos-cmd => arduino.axis1-cmd
-
-#unlinkp joint.2.motor-pos-cmd
-#net zpos-cmd joint.2.motor-pos-cmd => arduino.axis2-cmd
-
-
-# create nets for all Buttons
-#net key-01     <= STM_IO.IN.36 
-#net key-001    <= STM_IO.IN.33 
-#net key-0001   <= STM_IO.IN.35 
-#net key-A-     <= STM_IO.IN.39 
-#net key-A+     <= STM_IO.IN.42 
-#net key-X-     <= STM_IO.IN.10
-#net key-X+     <= STM_IO.IN.38 
-#net key-Y-     <= STM_IO.IN.16 
-#net key-Y+     <= STM_IO.IN.14 
-#net key-Z-     <= STM_IO.IN.12 
-#net key-Z+     <= STM_IO.IN.43 
-#net key-JogLck <= STM_IO.IN.34 
-#net key-LockX  <= STM_IO.IN.24 
-#net key-LockY  <= STM_IO.IN.40 
-#net key-LockZ  <= STM_IO.IN.11
-#net key-LLkX   <= STM_IO.IN.31
-#net key-RLkX   <= STM_IO.IN.25 
-##net key-SpdlL  <= STM_IO.IN.23
-#net key-SpdlR  <= STM_IO.IN.15 
-#net key-TlChng <= STM_IO.IN.46 
-#net key-Flood  <= STM_IO.IN.17
-#net key-MMS    <= STM_IO.IN.30
-#net key-Spare1 <= STM_IO.IN.44 
-#net key-Spare2 <= STM_IO.IN.47 
-#net key-Spare3 <= STM_IO.IN.27 
-#net key-Spare4 <= STM_IO.IN.28
-#net key-Spare5 <= STM_IO.IN.18 
-#net key-Spare6 <= STM_IO.IN.21 
-#net key-Spare7 <= STM_IO.IN.19 
-#
-# create nets for all LEDs
-
-#net led-01      => STM_IO.OUT.39
-#net led-001     => STM_IO.OUT.12
-#net led-0001    => STM_IO.OUT.38
-#net led-A-      => STM_IO.OUT.09
-#net led-A+      => STM_IO.OUT.05
-#net led-X-      => STM_IO.OUT.24
-#net led-X+      => STM_IO.OUT.26
-#net led-Y-      => STM_IO.OUT.42
-#net led-Y+      => STM_IO.OUT.02
-#net led-Z-      => STM_IO.OUT.07
-#net led-Z+      => STM_IO.OUT.33
-#net led-JogLck  => 3
-#net led-LockX   => STM_IO.OUT.22
-#net led-LockY   => STM_IO.OUT.25
-#net led-LockZ   => STM_IO.OUT.35
-#net led-LLkX    => STM_IO.OUT.21
-#net led-RLkX    => STM_IO.OUT.20
-#net led-SpdlL   => STM_IO.OUT.06
-#net led-SpdlR   => STM_IO.OUT.18
-#net led-TlChng  => STM_IO.OUT.15
-#net led-Flood   => STM_IO.OUT.08
-#net led-MMS     => STM_IO.OUT.14
-#net led-Spare1  => STM_IO.OUT.04
-#net led-Spare2  => STM_IO.OUT.11
-#net led-Spare3  => STM_IO.OUT.40
-#net led-Spare4  => STM_IO.OUT.23
-#net led-Spare5  => STM_IO.OUT.19
-#net led-Spare6  => STM_IO.OUT.10
-#net led-Spare7  => STM_IO.OUT.45
-
-####### rt components #######
-
-
 
 loadrt toggle2nist count=1
 addf toggle2nist.0 servo-thread
 
-loadrt not names=STM_IO.toolchg.not,drives-ready-not
+loadrt not names=STM_IO.toolchg.not,drives-ready-not,not_act_cal
 addf STM_IO.toolchg.not   servo-thread
 addf drives-ready-not servo-thread
 
-loadrt and2 names=STM_IO.toolchg.and,jog.enc,jog.enc.andX,jog.enc.andY,jog.enc.andZ,probeIn.and
+loadrt and2 names=STM_IO.toolchg.and,jog.enc,jog.enc.andX,jog.enc.andY,jog.enc.andZ,probeIn.and,and_probe1,and_probe2,and_probe3
 addf STM_IO.toolchg.and   servo-thread
 addf jog.enc.andX servo-thread
 addf jog.enc.andY servo-thread
@@ -114,6 +15,7 @@ addf jog.enc.andZ servo-thread
 addf probeIn.and servo-thread
 
 loadrt or2 names=jog.enc.sel-X,jog.enc.sel-Y,jog.enc.sel-Z,jog.enc.rst-01,jog.enc.rst-001,jog.enc.rst-0001,STM_IO.led-start,STM_IO.led-stop,STM_IO.toolchg.or,jog.enc.rst-selx,jog.enc.rst-sely,jog.enc.rst-selz,probeIn.or
+
 
 addf jog.enc.sel-X   servo-thread
 addf jog.enc.sel-Y   servo-thread
@@ -166,35 +68,37 @@ setp STM_IO.feedPot.scale 1
 setp STM_IO.feedPot.gain  0.025
 
 
-loadrt conv_float_s32 names=conv_float_s32.feed,conv_float_s32.spindel,conv_float_s32.jog
-addf conv_float_s32.feed servo-thread
-addf conv_float_s32.spindel servo-thread
-addf conv_float_s32.jog servo-thread
+loadrt scaleAnalog names=feedOverride,spindleOverride,jogOverride
+
+addf feedOverride            servo-thread
+addf spindleOverride         servo-thread
+addf jogOverride             servo-thread
 
 setp halui.feed-override.scale 0.01
 setp halui.feed-override.direct-value true
-setp hm2_7i76e.0.7i77.0.2.analogin1-scalemax 230
-net halui.feedanalog <= hm2_7i76e.0.7i77.0.2.analogin1 => conv_float_s32.feed.in
-net feedanalog conv_float_s32.feed.out => halui.feed-override.counts
+setp feedOverride.in-min 1000  
+setp feedOverride.in-max 14000
+setp feedOverride.out-min 0  
+setp feedOverride.out-max 150
+net halui.feed-raw  <= lcec.0.IoBoard.AN.5          => feedOverride.in
+net halui.feed-conv <= feedOverride.out             => halui.feed-override.counts
 
 setp halui.spindle.0.override.scale 0.01
 setp halui.spindle.0.override.direct-value true
-setp hm2_7i76e.0.7i77.0.2.analogin2-scalemax 230
-net halui.spindelanalog <= hm2_7i76e.0.7i77.0.2.analogin2 => conv_float_s32.spindel.in
-net spindelanalog conv_float_s32.spindel.out => halui.spindle.0.override.counts
-
-setp halui.feed-override.scale 0.01
-setp halui.feed-override.direct-value true
-setp hm2_7i76e.0.7i77.0.2.analogin0-scalemax 2500
-net halui.joganalog <= hm2_7i76e.0.7i77.0.2.analogin0 => halui.axis.jog-speed
-#net joganalog conv_float_s32.jog.out => halui.axis.jog-speed
+setp spindleOverride.in-min 1000  
+setp spindleOverride.in-max 14000
+setp spindleOverride.out-min 0  
+setp spindleOverride.out-max 125
+net halui.spindle-raw  <= lcec.0.IoBoard.AN.3          => spindleOverride.in
+net halui.spindle-conv <= spindleOverride.out          => halui.spindle.0.override.counts
 
 
-
-#net STM_IO.feedPot.raw      <= hm2_7i76e.0.7i77.0.2.analogin0 => STM_IO.feedPot.in
-#net STM_IO.feedPot          <= STM_IO.feedPot.out            => halui.spindle-override.value
-
-#setp halui.spindle-override.direct-value 1
+setp jogOverride.in-min 1000  
+setp jogOverride.in-max 14000
+setp jogOverride.out-min 50  
+setp jogOverride.out-max 3000
+net halui.jogAnalog-raw  <= lcec.0.IoBoard.AN.4          => jogOverride.in
+net halui.jogAnalog-conv <= jogOverride.outFloat     => halui.axis.jog-speed
 
 
 ########## Jog Setup for Buttons and Encoder wheel! ########
@@ -204,14 +108,14 @@ net halui.joganalog <= hm2_7i76e.0.7i77.0.2.analogin0 => halui.axis.jog-speed
 
 
 # connect the pysical pins to the toogle input as well as the reset or2 inputs
-net jog.enc.key-01.key     <= STM_IO.IN.01 => jog.enc.key-01.in   => jog.enc.rst-001.in0  => jog.enc.rst-0001.in0
-net jog.enc.key-001.key    <= STM_IO.IN.03 => jog.enc.key-001.in  => jog.enc.rst-01.in0   => jog.enc.rst-0001.in1
-net kjog.enc.ey-0001.key   <= STM_IO.IN.15 => jog.enc.key-0001.in => jog.enc.rst-01.in1   => jog.enc.rst-001.in1
+net jog.enc.key-01.key     <= lcec.0.IoBoard.IN1.in-01 => jog.enc.key-01.in   => jog.enc.rst-001.in0  => jog.enc.rst-0001.in0
+net jog.enc.key-001.key    <= lcec.0.IoBoard.IN1.in-05 => jog.enc.key-001.in  => jog.enc.rst-01.in0   => jog.enc.rst-0001.in1
+net kjog.enc.ey-0001.key   <= lcec.0.IoBoard.IN1.in-03 => jog.enc.key-0001.in => jog.enc.rst-01.in1   => jog.enc.rst-001.in1
 
 # axis selection with dedicated keys
-net jogSel.X.IN            <= STM_IO.IN.10     =>  jogSel.X.in   => jog.enc.rst-sely.in0   => jog.enc.rst-selz.in0
-net jogSel.Y.IN            <= STM_IO.IN.37     =>  jogSel.Y.in   => jog.enc.rst-selx.in0   => jog.enc.rst-selz.in1
-net jogSel.Z.IN            <= STM_IO.IN.34     =>  jogSel.Z.in   => jog.enc.rst-selx.in1   => jog.enc.rst-sely.in1
+net jogSel.X.IN            <= lcec.0.IoBoard.IN1.in-00     =>  jogSel.X.in   => jog.enc.rst-sely.in0   => jog.enc.rst-selz.in0
+net jogSel.Y.IN            <= lcec.0.IoBoard.IN2.in-06     =>  jogSel.Y.in   => jog.enc.rst-selx.in0   => jog.enc.rst-selz.in1
+net jogSel.Z.IN            <= lcec.0.IoBoard.IN1.in-11     =>  jogSel.Z.in   => jog.enc.rst-selx.in1   => jog.enc.rst-sely.in1
 
 #connect the toggle reset input to the or2 reset outputs
 net jog.enc.rst-selx       <= jogSel.X.rst => jog.enc.rst-selx.out
@@ -237,14 +141,21 @@ net jog.enc.step-choice => axis.z.jog-scale
 #net jog.enc.step-choice => axis.a.jog-scale
 
 
+loadrt conv_u32_s32 names=jog.enc.jogEncoder
+addf jog.enc.jogEncoder          servo-thread
 
-net jog.enc.jogCounts.raw <= hm2_7i76e.0.encoder.01.count     => jog.enc.enc-smooth.in
+
+
+# TODO Signed 32
+
+net jog.enc.jogCounts.raw <= lcec.0.IoBoard.ENC.2     => jog.enc.jogEncoder.in
+net jog.enc.jogCounts.s32 <= jog.enc.jogEncoder.out     => jog.enc.enc-smooth.in
 
 net jog.enc.jogCounts   <= jog.enc.enc-smooth.out
 net jog.enc.jogCounts   => axis.x.jog-counts
 net jog.enc.jogCounts   => axis.y.jog-counts
 net jog.enc.jogCounts   => axis.z.jog-counts
-#net jog.enc.jogCounts   => axis.a.jog-counts
+# net jog.enc.jogCounts   => axis.a.jog-counts
 
 
 setp axis.x.jog-vel-mode 1
@@ -270,16 +181,16 @@ net jog.enc.ena-z <= jog.enc.andZ.out => axis.z.jog-enable => halui.joint.2.sele
 
 # connect leds and the step choice to the toggle outputs
 net jog.enc.led-01     <= jog.enc.key-01.out        => jog.enc.step-choice.sel0
-net jog.enc.led-01     => STM_IO.OUT.40
+net jog.enc.led-01     => lcec.0.IoBoard.OUT3.out-01
 net jog.enc.led-001    <= jog.enc.key-001.out       => jog.enc.step-choice.sel1
-net jog.enc.led-001    => STM_IO.OUT.44
+net jog.enc.led-001    => lcec.0.IoBoard.OUT3.out-05
 net jog.enc.led-0001   <= jog.enc.key-0001.out      => jog.enc.step-choice.sel2
-net jog.enc.led-0001   => STM_IO.OUT.42
+net jog.enc.led-0001   => lcec.0.IoBoard.OUT3.out-03
 
 #connect leds for axis selection
-net jog.enc.ena-x => STM_IO.OUT.37
-net jog.enc.ena-y => STM_IO.OUT.08
-net jog.enc.ena-z => STM_IO.OUT.31
+net jog.enc.ena-x => lcec.0.IoBoard.OUT2.out-02
+net jog.enc.ena-y => lcec.0.IoBoard.OUT2.out-14
+net jog.enc.ena-z => lcec.0.IoBoard.OUT1.out-12
 
 
 
@@ -298,17 +209,17 @@ addf jog.select servo-thread
 
 
 # connect the buttons to the jog Lock component
-net jog.jockLock  <= STM_IO.IN.36 => jog.jockLock.in
+net jog.jockLock  <= lcec.0.IoBoard.IN2.in-09 => jog.jockLock.in
 
-net jog.raw.key-x-pos       <= STM_IO.IN.05         => jog.jogCntrl.keys-0
-net jog.raw.key-x-neg       <= STM_IO.IN.38         => jog.jogCntrl.keys-1
-net jog.raw.key-y-pos       <= STM_IO.IN.06         => jog.jogCntrl.keys-2
-net jog.raw.key-y-neg       <= STM_IO.IN.42         => jog.jogCntrl.keys-3
-net jog.raw.key-z-pos       <= STM_IO.IN.33         => jog.jogCntrl.keys-4
-net jog.raw.key-z-neg       <= STM_IO.IN.39         => jog.jogCntrl.keys-5
-net jog.raw.key-a-pos       <= STM_IO.IN.07         => jog.jogCntrl.keys-6
-net jog.raw.key-a-neg       <= STM_IO.IN.25         => jog.jogCntrl.keys-7
-net jog.raw.jogLock         <= jog.jockLock.out     => jog.jogCntrl.joglocktoggle   => STM_IO.OUT.30
+net jog.raw.key-x-pos       <= lcec.0.IoBoard.IN1.in-04         => jog.jogCntrl.keys-0
+net jog.raw.key-x-neg       <= lcec.0.IoBoard.IN1.in-06         => jog.jogCntrl.keys-1
+net jog.raw.key-y-pos       <= lcec.0.IoBoard.IN2.in-05         => jog.jogCntrl.keys-2
+net jog.raw.key-y-neg       <= lcec.0.IoBoard.IN2.in-15         => jog.jogCntrl.keys-3
+net jog.raw.key-z-pos       <= lcec.0.IoBoard.IN2.in-00         => jog.jogCntrl.keys-4
+net jog.raw.key-z-neg       <= lcec.0.IoBoard.IN2.in-03         => jog.jogCntrl.keys-5
+net jog.raw.key-a-pos       <= lcec.0.IoBoard.IN1.in-12         => jog.jogCntrl.keys-6
+net jog.raw.key-a-neg       <= lcec.0.IoBoard.IN1.in-08         => jog.jogCntrl.keys-7
+net jog.raw.jogLock         <= jog.jockLock.out     => jog.jogCntrl.joglocktoggle   => lcec.0.IoBoard.OUT1.out-00
 
 net jog.out.key-x-pos       <= jog.jogCntrl.out-0   
 net jog.out.key-x-neg       <= jog.jogCntrl.out-1   
@@ -320,14 +231,14 @@ net jog.out.key-a-pos       <= jog.jogCntrl.out-6
 net jog.out.key-a-neg       <= jog.jogCntrl.out-7   
 
 
-net jog.out.key-x-pos       => STM_IO.OUT.35        => halui.axis.x.plus
-net jog.out.key-x-neg       => STM_IO.OUT.33        => halui.axis.x.minus
-net jog.out.key-y-pos       => STM_IO.OUT.47        => halui.axis.y.plus
-net jog.out.key-y-neg       => STM_IO.OUT.29        => halui.axis.y.minus
-net jog.out.key-z-pos       => STM_IO.OUT.39        => halui.axis.z.plus
-net jog.out.key-z-neg       => STM_IO.OUT.41        => halui.axis.z.minus
-net jog.out.key-a-pos       => STM_IO.OUT.38
-net jog.out.key-a-neg       => STM_IO.OUT.28
+net jog.out.key-x-pos       => lcec.0.IoBoard.OUT1.out-14        => halui.axis.x.plus
+net jog.out.key-x-neg       => lcec.0.IoBoard.OUT1.out-08        => halui.axis.x.minus
+net jog.out.key-y-pos       => lcec.0.IoBoard.OUT2.out-12        => halui.axis.y.plus
+net jog.out.key-y-neg       => lcec.0.IoBoard.OUT1.out-13        => halui.axis.y.minus
+net jog.out.key-z-pos       => lcec.0.IoBoard.OUT1.out-03        => halui.axis.z.plus
+net jog.out.key-z-neg       => lcec.0.IoBoard.OUT2.out-09        => halui.axis.z.minus
+net jog.out.key-a-pos       => lcec.0.IoBoard.OUT1.out-07
+net jog.out.key-a-neg       => lcec.0.IoBoard.OUT1.out-09
 
 
 
@@ -336,41 +247,41 @@ net jog.out.key-a-neg       => STM_IO.OUT.28
 
 
 
-# jogLock outputs the last selected axis. Use this for the encoder wheel axis select thorugh ors.
+# # jogLock outputs the last selected axis. Use this for the encoder wheel axis select thorugh ors.
 
-net jog.lastAxis.data       <= jog.jogCntrl.lastActive => jog.select.sel
+# net jog.lastAxis.data       <= jog.jogCntrl.lastActive => jog.select.sel
 
-#net jog.enc.sel-X-IN0       <= jog.select.out0      => jog.enc.sel-X.in0 
-#net jog.enc.sel-X-IN1       <= jog.select.out1      => jog.enc.sel-X.in1 
+# #net jog.enc.sel-X-IN0       <= jog.select.out0      => jog.enc.sel-X.in0 
+# #net jog.enc.sel-X-IN1       <= jog.select.out1      => jog.enc.sel-X.in1 
 
-#net jog.enc.sel-Y-IN0       <= jog.select.out2      => jog.enc.sel-Y.in0 
-#net jog.enc.sel-Y-IN1       <= jog.select.out3      => jog.enc.sel-Y.in1 
+# #net jog.enc.sel-Y-IN0       <= jog.select.out2      => jog.enc.sel-Y.in0 
+# #net jog.enc.sel-Y-IN1       <= jog.select.out3      => jog.enc.sel-Y.in1 
 
-#net jog.enc.sel-Z-IN0       <= jog.select.out4      => jog.enc.sel-Z.in0 
-#net jog.enc.sel-Z-IN1       <= jog.select.out5      => jog.enc.sel-Z.in1 
+# #net jog.enc.sel-Z-IN0       <= jog.select.out4      => jog.enc.sel-Z.in0 
+# #net jog.enc.sel-Z-IN1       <= jog.select.out5      => jog.enc.sel-Z.in1 
 
 
 
 ############# Axis Lock Control ###############
 
-net axisLock.X.IN            <= STM_IO.IN.43        =>  axisLock.X.in
-net axisLock.Y.IN            <= STM_IO.IN.09        =>  axisLock.Y.in
-net axisLock.Z.IN            <= STM_IO.IN.35        =>  axisLock.Z.in
+# net axisLock.X.IN            <= STM_IO.IN.43        =>  axisLock.X.in
+# net axisLock.Y.IN            <= STM_IO.IN.09        =>  axisLock.Y.in
+# net axisLock.Z.IN            <= STM_IO.IN.35        =>  axisLock.Z.in
 
 # net axisLock.X.rst        
 # all axisLock resets are connected to halui.program.is-running
 
-net axisLock.X               <= axisLock.X.out       => STM_IO.OUT.10   => hm2_7i76e.0.7i77.0.2.output-04    =>  jog.jogCntrl.lock-0
-net axisLock.Y               <= axisLock.Y.out       => STM_IO.OUT.18   => hm2_7i76e.0.7i77.0.2.output-05    =>  jog.jogCntrl.lock-1
-net axisLock.Z               <= axisLock.Z.out       => STM_IO.OUT.09   => hm2_7i76e.0.7i77.0.2.output-06    =>  jog.jogCntrl.lock-2
+# net axisLock.X               <= axisLock.X.out       => lcec.0.IoBoard.OUT1.out-01   => hm2_7i76e.0.7i77.0.2.output-04    =>  jog.jogCntrl.lock-0
+# net axisLock.Y               <= axisLock.Y.out       => lcec.0.IoBoard.OUT2.out-05   => hm2_7i76e.0.7i77.0.2.output-05    =>  jog.jogCntrl.lock-1
+# net axisLock.Z               <= axisLock.Z.out       => lcec.0.IoBoard.OUT2.out-01   => hm2_7i76e.0.7i77.0.2.output-06    =>  jog.jogCntrl.lock-2
 
-setp jog.jogCntrl.lock-3 0 # fourth axis has no lock
+# setp jog.jogCntrl.lock-3 0 # fourth axis has no lock
 
 
 
 ################# Program Start stop pause setup ###################
 # program start pause resume stop with two buttons
-loadrt lut5 names=STM_IO.start.lut,STM_IO.pause.lut,STM_IO.resume.lut
+loadrt lut5 names=STM_IO.start.lut,STM_IO.pause.lut,STM_IO.resume.lut,lut_inhibit,lut_midpoint,lut_rotation,lut_distance
 addf STM_IO.start.lut    servo-thread
 addf STM_IO.pause.lut    servo-thread
 addf STM_IO.resume.lut   servo-thread
@@ -382,7 +293,7 @@ setp STM_IO.resume.lut.function  0x2000000  # resume when paused. Button & is-is
 
 
 #inputs for the lut5 
-net  STM_IO.start.IN0      <= hm2_7i76e.0.7i77.0.2.input-23 => STM_IO.start.lut.in-0  => STM_IO.pause.lut.in-0  => STM_IO.resume.lut.in-0
+net  STM_IO.start.IN0      <= lcec.0.IoBoard.IN3.in-01 => STM_IO.start.lut.in-0  => STM_IO.pause.lut.in-0  => STM_IO.resume.lut.in-0
 net  STM_IO.start.IN1      <= halui.program.is-idle      => STM_IO.start.lut.in-1  => STM_IO.pause.lut.in-1  => STM_IO.resume.lut.in-1   => STM_IO.led-stop.in1  
 net  STM_IO.start.IN2      <= halui.program.is-running   => STM_IO.start.lut.in-2  => STM_IO.pause.lut.in-2  => STM_IO.resume.lut.in-2   => STM_IO.led-start.in0 => axisLock.X.rst   => axisLock.Y.rst   => axisLock.Z.rst 
 net  STM_IO.start.IN3      <= halui.mode.is-auto         => STM_IO.start.lut.in-3  => STM_IO.pause.lut.in-3  => STM_IO.resume.lut.in-3
@@ -400,36 +311,36 @@ net  STM_IO.resume.OUT      <= STM_IO.resume.lut.out
 net  STM_IO.resume.OUT      => halui.program.resume 
 
 #stop program when stop is pressed
-net  STM_IO.stop      <= hm2_7i76e.0.7i77.0.2.input-22
+net  STM_IO.stop      <= lcec.0.IoBoard.IN3.in-00
 net  STM_IO.stop      => halui.program.stop
 
 #led start is on during running and paused
 net STM_IO.led-start       <= STM_IO.led-start.out
-net STM_IO.led-start       => STM_IO.OUT.14
+net STM_IO.led-start       => lcec.0.IoBoard.OUT2.out-06
 
 #led stop is on during idle and paused
 net STM_IO.led-stop       <= STM_IO.led-stop.out
-net STM_IO.led-stop       => STM_IO.OUT.13
+net STM_IO.led-stop       => lcec.0.IoBoard.OUT2.out-04
 
 
 
 
-net spindle-manual-cw       <= STM_IO.IN.46 
+net spindle-manual-cw       <= lcec.0.IoBoard.IN2.in-10
 net STM_IO.led-spindle-cw   <= halui.spindle.0.runs-forward     => STM_IO.toolchg.or.in0
-net STM_IO.led-spindle-cw   => STM_IO.OUT.25
+net STM_IO.led-spindle-cw   => lcec.0.IoBoard.OUT1.out-02
 
-net spindle-manual-ccw      <= STM_IO.IN.44
+net spindle-manual-ccw      <= lcec.0.IoBoard.IN2.in-12
 net STM_IO.led-spindle-ccw   <= halui.spindle.0.runs-backward   => STM_IO.toolchg.or.in1
-net STM_IO.led-spindle-ccw   => STM_IO.OUT.43
+net STM_IO.led-spindle-ccw   => lcec.0.IoBoard.OUT2.out-10
 
-net spindle-manual-stop     <= STM_IO.IN.08
-net spindle-manual-stop     => STM_IO.OUT.26
+net spindle-manual-stop     <= lcec.0.IoBoard.IN1.in-13
+net spindle-manual-stop     => lcec.0.IoBoard.OUT1.out-05
 
 
 
-net STM_IO.clearMsg         <= STM_IO.IN.27
-#net STM_IO.clearMsg         => axisui.notifications-clear
-net STM_IO.clearMsg         => STM_IO.OUT.23
+# net STM_IO.clearMsg         <= STM_IO.IN.27
+# #net STM_IO.clearMsg         => axisui.notifications-clear
+# net STM_IO.clearMsg         => S TM_IO.OUT.23
 
 
 
@@ -456,10 +367,11 @@ net drives-ready <= motion.driveReady.out => drives-ready-not.in => jog.enc.andX
 
 net drivers-ready-not <= drives-ready-not.out => motion.feed-inhibit 
 
-net STM_IO.clearDriveFault  <= STM_IO.IN.45
+# TODO clear fault
+net STM_IO.clearDriveFault  <=  lcec.0.IoBoard.IN2.in-01
 net STM_IO.clearDriveFault  => lcec.0.A3_X.srv-fault-reset => lcec.0.A3_Y.srv-fault-reset => lcec.0.A3_Z.srv-fault-reset => lcec.0.0-Spindle.srv-fault-reset
 
-net driveFaultLED <= motion.driveFault.out => STM_IO.OUT.34 
+net driveFaultLED <= motion.driveFault.out => lcec.0.IoBoard.OUT1.out-04
 
 
 
@@ -471,36 +383,36 @@ net driveFaultLED <= motion.driveFault.out => STM_IO.OUT.34
 
 net STM_IO.toolchg.or.OUT       <= STM_IO.toolchg.or.out    => STM_IO.toolchg.not.in
 net STM_IO.toolchg.not.OUT      <=  STM_IO.toolchg.not.out  => STM_IO.toolchg.and.in0
-net STM_IO.toolchg.and.IN1      <= STM_IO.IN.04             => STM_IO.toolchg.and.in1
+net STM_IO.toolchg.and.IN1      <= lcec.0.IoBoard.IN2.in-08 => STM_IO.toolchg.and.in1
 net STM_IO.toolchg.and.OUT      <=  STM_IO.toolchg.and.out  => STM_IO.toolchg.in
-net STM_IO.toolchg              <= STM_IO.toolchg.out       =>  STM_IO.OUT.45           => hm2_7i76e.0.7i77.0.2.output-08
+net STM_IO.toolchg              <= STM_IO.toolchg.out       =>  lcec.0.IoBoard.OUT2.out-08           => lcec.0.EK.DOUT2.dout-3
 
 
 
 ### Probe and Toollength logic
-net probeInOr1 <= hm2_7i76e.0.7i77.0.2.input-30-not => probeIn.or.in0
+net probeInOr1 <= lcec.0.EK.DIN1.din-10-not => probeIn.or.in0
 
-net probeInAnd1 <= hm2_7i76e.0.7i77.0.2.input-29 => probeIn.and.in0
-net probeInAnd2 <= hm2_7i76e.0.7i77.0.2.input-31-not => probeIn.and.in1
+net probeInAnd1 <= lcec.0.EK.DIN1.din-12 => probeIn.and.in0
+net probeInAnd2 <= lcec.0.EK.DIN1.din-11-not => probeIn.and.in1
 
 net probeInOr2 <= probeIn.and.out => probeIn.or.in1
 
-#net probeInOrOut <= probeIn.or.out # => motion.probe-input
+#net probeInOrOut <= probeIn.or.out 
 
 
 
-#Seems these need to be here to keep check boxes visible
-net coolant-flood     <=  iocontrol.0.coolant-flood
+# #Seems these need to be here to keep check boxes visible
+# net coolant-flood     <=  iocontrol.0.coolant-flood
 
 
-# Coolant switch
-net flood-toggle toggle2nist.0.in <= STM_IO.IN.47
-net flood-on toggle2nist.0.on => halui.flood.on
-net flood-off toggle2nist.0.off => halui.flood.off
-net flood-control <= halui.flood.is-on => toggle2nist.0.is-on 
-#net flood-control => STM_IO.OUT.24
+# # Coolant switch
+# net flood-toggle toggle2nist.0.in <= STM_IO.IN.47
+# net flood-on toggle2nist.0.on => halui.flood.on
+# net flood-off toggle2nist.0.off => halui.flood.off
+# net flood-control <= halui.flood.is-on => toggle2nist.0.is-on 
+# #net flood-control => lcec.0.IoBoard.OUT1.out-11
 
-# Coolant LED control
-#net flood-control halui.flood.is-on => hm2_7i76e.0.7i76.0.0.output-14
-net flood-control  halui.flood.is-on => STM_IO.OUT.24
+# # Coolant LED control
+# #net flood-control halui.flood.is-on => hm2_7i76e.0.7i76.0.0.output-14
+# net flood-control  halui.flood.is-on => lcec.0.IoBoard.OUT1.out-11
 

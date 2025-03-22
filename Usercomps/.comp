@@ -1,0 +1,34 @@
+
+component scaleAnalog "scale analog input";
+pin in unsigned in;
+pin out signed out;
+pin out float outFloat;
+
+param rw signed in-min;
+param rw signed in-max;
+
+param rw signed out-min;
+param rw signed out-max;
+
+
+
+
+function _ nofp;
+license "GPL";
+;;
+
+FUNCTION(_) {
+
+    signed input = in;
+    if(input > in_max)
+    {
+        input = in_max;
+    }
+    if(input < in_min)
+    {
+        input = in_min;
+    }
+
+    out = (input - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+    outFloat = (float)out;
+}

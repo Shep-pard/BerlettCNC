@@ -108,7 +108,7 @@
   <property name="bitmem" type="int" value="50"/>
   <property name="centerembededgvcp" type="bool" value="True"/>
   <property name="cl_haluicmds" type="int" value="0"/>
-  <property name="classicladder" type="int" value="0"/>
+  <property name="classicladder" type="int" value="1"/>
   <property name="createshortcut" type="bool" value="True"/>
   <property name="createsymlink" type="bool" value="True"/>
   <property name="customhal" type="bool" value="False"/>

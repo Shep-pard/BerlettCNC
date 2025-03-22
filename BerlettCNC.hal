@@ -5,16 +5,19 @@
 
 loadrt [KINS]KINEMATICS
 loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
-loadrt hostmot2
-loadrt hm2_eth board_ip="192.168.1.121" config="num_encoders=7 num_pwmgens=0 num_stepgens=5 sserial_port_0=00200000" 
 
 
-setp    hm2_7i76e.0.watchdog.timeout_ns 5000000
 loadrt pid names=pid.x,pid.y,pid.z,pid.s
-
-addf hm2_7i76e.0.read          servo-thread
 loadusr -W lcec_conf ethercat.xml
+
 loadrt lcec
+loadrt classicladder_rt
+ 	
+
+loadrt timedelay names=onDelay
+addf onDelay servo-thread
+setp onDelay.on-delay 4
+setp onDelay.off-delay 0
 
 
 addf motion-command-handler   servo-thread
@@ -23,63 +26,48 @@ addf pid.x.do-pid-calcs       servo-thread
 addf pid.y.do-pid-calcs       servo-thread
 addf pid.z.do-pid-calcs       servo-thread
 addf pid.s.do-pid-calcs       servo-thread
-addf hm2_7i76e.0.write         servo-thread
-setp hm2_7i76e.0.dpll.01.timer-us -50
-setp hm2_7i76e.0.stepgen.timer-number 1
 
 addf lcec.read-all            servo-thread
 addf lcec.write-all           servo-thread
 
+
+addf classicladder.0.refresh servo-thread
+loadusr classicladder ladderfunc.clp --nogui 
+
 # external output signals
 
 
-# --- SPINDLE-CW ---
-net spindle-cw  =>     hm2_7i76e.0.7i77.0.2.output-00
 
-# --- SPINDLE-CCW ---
-net spindle-ccw  =>     hm2_7i76e.0.7i77.0.2.output-01
+# # --- Z-ENABLE ---
+# net z-enable  =>     hm2_7i76e.0.7i77.0.2.output-02
 
-# --- Z-ENABLE ---
-net z-enable  =>     hm2_7i76e.0.7i77.0.2.output-02
+# # --- COOLANT-FLOOD ---
+# net coolant-flood  =>     hm2_7i76e.0.7i77.0.2.output-03
 
-# --- COOLANT-FLOOD ---
-net coolant-flood  =>     hm2_7i76e.0.7i77.0.2.output-03
+# # external input signals
 
-# external input signals
-
-
-# --- JOG-X-POS ---
-#net jog-x-pos     <=  hm2_7i76e.0.7i77.0.2.input-09
-
-# --- JOG-Z-NEG ---
-#net jog-z-neg     <=  hm2_7i76e.0.7i77.0.2.input-10
 
 # --- MAX-HOME-X ---
-net max-home-x     <=  hm2_7i76e.0.7i77.0.2.input-17-not
+net max-home-x     <=   lcec.0.EK.DIN1.din-1-not
 
 # --- MIN-X ---
-net min-x     <=  hm2_7i76e.0.7i77.0.2.input-16-not
+net min-x     <=  lcec.0.EK.DIN1.din-0-not
 
 # --- MAX-HOME-Y ---
-net max-home-y     <=  hm2_7i76e.0.7i77.0.2.input-18-not
+net max-home-y     <=  lcec.0.EK.DIN1.din-2-not
 
 # --- MIN-Y ---
-net min-y     <=  hm2_7i76e.0.7i77.0.2.input-19-not
+net min-y     <=  lcec.0.EK.DIN1.din-3-not
 
 # --- MAX-HOME-Z ---
-net max-home-z     <=  hm2_7i76e.0.7i77.0.2.input-20-not
+net max-home-z     <=  lcec.0.EK.DIN1.din-4-not
 
 # --- MIN-Z ---
-net min-z     <=  hm2_7i76e.0.7i77.0.2.input-21-not
+net min-z     <=  lcec.0.EK.DIN1.din-13-not
 
-# --- CYCLE-START ---
-#net cycle-start     <=  hm2_7i76e.0.7i77.0.2.input-22
-
-## --- ABORT ---
-#net abort     <=  hm2_7i76e.0.7i77.0.2.input-23
 
 # --- ESTOP-EXT ---
-net estop-ext     <=  hm2_7i76e.0.7i77.0.2.input-24
+net estop-ext     <=  lcec.0.EK.DIN1.din-9
 
 
 
@@ -259,7 +247,7 @@ net spindle-dfe-feedback <=  lcec.0.0-Spindle.current-speed => dfe24gateway.dfe-
 net spindle-dfe-load     <= lcec.0.0-Spindle.current-load => dfe24gateway.dfe-load
 
 
-net spindle-enable => lcec.0.0-Spindle.srv-enable => lcec.0.0-Spindle.srv-switch-on
+net spindle-enable => lcec.0.0-Spindle.srv-enable => lcec.0.0-Spindle.srv-switch-on => lcec.0.EK.DOUT1.dout-0
 
 setp dfe24gateway.gearHighScale 1.25
 setp dfe24gateway.gearLowScale 3.525
@@ -300,25 +288,28 @@ net coolant-flood     <=  iocontrol.0.coolant-flood
 
 #  ---probe signal---
 # moved to stm_io
-#net probe-in     =>  motion.probe-input
-
-# ---jogwheel signals to mesa encoder - shared MPG---
-
-#net axis-selected-count     <=  hm2_7i76e.0.encoder.01.count
 
 #  ---motion control signals---
 
 net in-position               <=  motion.in-position
 net machine-is-enabled        <=  motion.motion-enabled
+net machine-is-enabled        =>  => lcec.0.EK.DOUT2.dout-8
 
-#  ---digital in / out signals---
+
+net pressure-min <= lcec.0.EK.DIN1.din-6 => classicladder.0.in-00
+net pressure-max <= lcec.0.EK.DIN1.din-7 => classicladder.0.in-01
+net pressure-out <= classicladder.0.out-00 => lcec.0.EK.DOUT2.dout-2
 
 
 #  ---estop signals---
 
 net estop-out     <=  iocontrol.0.user-enable-out
 net estop-ext     =>  iocontrol.0.emc-enable-in
-net estop-ext     =>  lcec.0.A3_X.srv-enable-volt => lcec.0.A3_Y.srv-enable-volt => lcec.0.A3_Z.srv-enable-volt
+net estop-ext     =>  onDelay.in => lcec.0.EK.DOUT2.dout-4 
+
+net enableHv <= onDelay.out => lcec.0.A3_X.srv-enable-volt => lcec.0.A3_Y.srv-enable-volt => lcec.0.A3_Z.srv-enable-volt
+
+
 
 
 #  ---manual tool change signals---

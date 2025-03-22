@@ -1,18 +1,158 @@
 <masters>
-  <master idx="0" appTimePeriod="500000" refClockSyncCycles="500">
-    <slave idx="0" type="DeASDA3" name="A3_Z">
+  <master idx="0" appTimePeriod="500000" refClockSyncCycles="500">    
+    <slave idx="0" type="generic" vid="0x00001337" pid="0xdeadbeef" name="IoBoard">
+      <!--IO Board-->
+      <syncManager idx="0" dir="in"/>
+      <syncManager idx="1" dir="out"/>
+      <syncManager idx="2" dir="out">
+        <pdo idx="1600">
+          <!--Outputs-->
+          <pdoEntry idx="7001" subIdx="01" bitLen="16" halType="complex">
+            <complexEntry bitLen="1" halPin="OUT1.out-00" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-01" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-02" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-03" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-04" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-05" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-06" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-07" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-08" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-09" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-10" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-11" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-12" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-13" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-14" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT1.out-15" halType="bit"/>
+          </pdoEntry>
+          <pdoEntry idx="7001" subIdx="02" bitLen="16" halType="complex">
+            <complexEntry bitLen="1" halPin="OUT2.out-00" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-01" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-02" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-03" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-04" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-05" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-06" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-07" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-08" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-09" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-10" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-11" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-12" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-13" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-14" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT2.out-15" halType="bit"/>
+          </pdoEntry>
+          <pdoEntry idx="7001" subIdx="03" bitLen="16" halType="complex">
+            <complexEntry bitLen="1" halPin="OUT3.out-00" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-01" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-02" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-03" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-04" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-05" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-06" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-07" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-08" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-09" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-10" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-11" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-12" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-13" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-14" halType="bit"/>
+            <complexEntry bitLen="1" halPin="OUT3.out-15" halType="bit"/>
+          </pdoEntry>
+        </pdo>
+      </syncManager>
+      <syncManager idx="3" dir="in">
+        <pdo idx="1a00">
+          <!--Inputs-->
+          <pdoEntry idx="6000" subIdx="01" bitLen="16" halType="complex">
+            <complexEntry bitLen="1" halPin="IN1.in-00" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-01" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-02" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-03" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-04" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-05" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-06" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-07" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-08" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-09" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-10" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-11" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-12" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-13" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-14" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN1.in-15" halType="bit"/>
+          </pdoEntry>
+          <pdoEntry idx="6000" subIdx="02" bitLen="16" halType="complex">
+            <complexEntry bitLen="1" halPin="IN2.in-00" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-01" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-02" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-03" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-04" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-05" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-06" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-07" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-08" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-09" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-10" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-11" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-12" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-13" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-14" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN2.in-15" halType="bit"/>
+          </pdoEntry>
+          <pdoEntry idx="6000" subIdx="03" bitLen="16" halType="complex">
+            <complexEntry bitLen="1" halPin="IN3.in-00" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-01" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-02" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-03" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-04" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-05" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-06" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-07" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-08" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-09" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-10" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-11" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-12" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-13" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-14" halType="bit"/>
+            <complexEntry bitLen="1" halPin="IN3.in-15" halType="bit"/>
+          </pdoEntry>          
+        </pdo>
+        <pdo idx="1a01">
+          <!--Encoder-->
+          <pdoEntry idx="6001" subIdx="01" bitLen="32" halPin="ENC.1" halType="u32"/>
+          <pdoEntry idx="6001" subIdx="02" bitLen="32" halPin="ENC.2" halType="u32"/>
+          <pdoEntry idx="6001" subIdx="03" bitLen="32" halPin="ENC.3" halType="u32"/>
+          <pdoEntry idx="6001" subIdx="04" bitLen="23" halPin="ENC.4" halType="u32"/>
+        </pdo>
+        <pdo idx="1a02">
+          <!--Analog-->
+          <pdoEntry idx="6002" subIdx="01" bitLen="16" halPin="AN.0" halType="u32"/>
+          <pdoEntry idx="6002" subIdx="02" bitLen="16" halPin="AN.1" halType="u32"/>
+          <pdoEntry idx="6002" subIdx="03" bitLen="16" halPin="AN.2" halType="u32"/>
+          <pdoEntry idx="6002" subIdx="04" bitLen="16" halPin="AN.3" halType="u32"/>
+          <pdoEntry idx="6002" subIdx="05" bitLen="16" halPin="AN.4" halType="u32"/>
+          <pdoEntry idx="6002" subIdx="06" bitLen="16" halPin="AN.5" halType="u32"/>
+        </pdo>
+      </syncManager>
+    </slave>
+
+    <slave idx="1" type="DeASDA3" name="A3_Z">
       <modParam name="opmode" value="CSV"/>
       <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
     </slave>
-    <slave idx="1" type="DeASDA3" name="A3_Y">
+    <slave idx="2" type="DeASDA3" name="A3_Y">
       <modParam name="opmode" value="CSV"/>
       <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
     </slave>
-    <slave idx="2" type="DeASDA3" name="A3_X">
+    <slave idx="3" type="DeASDA3" name="A3_X">
       <modParam name="opmode" value="CSV"/>
       <dcConf assignActivate="300" sync0Cycle="*1" sync0Shift="0"/>
     </slave>
-    <slave idx="3" type="generic" name="0-Spindle" vid="0x00000059" pid="0x00000002" configPdos="true">
+    <slave idx="4" type="generic" name="0-Spindle" vid="0x00000059" pid="0x00000002" configPdos="true">
       <initCmds filename="DFEGateway.xml"/>
       <watchdog divider="25000" intervals="100"/>
       <syncManager idx="0" dir="in"/>
@@ -91,16 +231,11 @@
         </pdo>
       </syncManager>
     </slave>
-    <slave idx="4" type="EK1100" name="EK"/>
-    <slave idx="5" type="EL4004" name="AO1"/>
-    <slave idx="6" type="EL1809" name="DI1"/>
-    <slave idx="7" type="EL1809" name="DI2"/>
-    <slave idx="8" type="EL1809" name="DI3"/>
-    <slave idx="9" type="EL2809" name="DO1"/>
-    <slave idx="10" type="EL2809" name="DO2"/>
-
-    
-
+    <slave idx="5" type="EK1100" name="EK.EK"/>
+    <slave idx="6" type="EL1809" name="EK.DIN1"/>
+    <slave idx="7" type="EL1809" name="EK.DIN2"/>
+    <slave idx="8" type="EL2809" name="EK.DOUT1"/>
+    <slave idx="9" type="EL2809" name="EK.DOUT2"/>
   </master>
 </masters>
     

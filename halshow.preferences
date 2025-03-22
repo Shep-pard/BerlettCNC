@@ -1,27 +1,27 @@
 # Halshow settings
 # This file is generated automatically.
-wm geometry . 1280x917+0+0
-placeFrames 0.3
-set ::ratio 0.3
+wm geometry . 853x590+427+110
+placeFrames 0.3818615751789976
+set ::ratio 0.3818615751789976
 set ::old_w_leftf 160
 set ::watchlist {
-    pin+lcec.0.DO2.dout-0
-    pin+lcec.0.DO2.dout-1
-    pin+lcec.0.DO2.dout-2
-    pin+lcec.0.DO2.dout-3
-    pin+lcec.0.DO2.dout-4
-    pin+lcec.0.DO2.dout-6
-    pin+lcec.0.DO2.dout-7
-    pin+lcec.0.DO2.dout-8
-    pin+lcec.0.DO2.slave-online
-    pin+lcec.0.DO2.dout-9
-    pin+lcec.0.DO2.dout-10
-    pin+lcec.0.DO2.dout-11
-    pin+lcec.0.DO2.dout-13
-    pin+lcec.0.DO2.dout-14
-    pin+lcec.0.DO2.dout-15
-    pin+lcec.0.DO2.dout-5
-    pin+lcec.0.DO2.dout-12
+    pin+lcec.0.IoBoard.IN2.in-08
+    pin+halui.joint.selected
+    pin+halui.axis.selected
+    pin+halui.axis.jog-speed
+    pin+halui.feed-override.value
+    pin+halui.feed-override.counts
+    pin+halui.feed-override.scale
+    pin+halui.spindle.0.override.scale
+    pin+jog.enc.jogEncoder.in
+    pin+jog.enc.jogEncoder.out
+    pin+lcec.0.IoBoard.AN.3
+    pin+lcec.0.IoBoard.AN.4
+    pin+lcec.0.IoBoard.AN.5
+    pin+motion.program-line
+    pin+motion.probe-input
+    pin+onDelay.on-delay
+    pin+onDelay.off-delay
 }
 set ::workmode watchhal
 set ::watchInterval 100
